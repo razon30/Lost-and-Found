@@ -1,6 +1,7 @@
 package razon.lostandfound.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import razon.lostandfound.R;
+import razon.lostandfound.activity.HomeActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +33,15 @@ public class SignUpFragment extends Fragment {
 
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new LoginFragment()).commit();
+
+            }
+        });
+
+        signUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                getActivity().startActivity(new Intent(getActivity(), HomeActivity.class));
 
             }
         });

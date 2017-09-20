@@ -11,7 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#d9383839"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
         <ScrollView
             android:layout_marginTop="20dp"
@@ -49,6 +51,8 @@
                         android:textColorHint="#FFFFFF">
 
                         <EditText
+                            android:inputType="text"
+                            android:id="@+id/name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:drawableLeft="@drawable/ic_person"
@@ -65,6 +69,8 @@
                         android:textColorHint="#FFFFFF">
 
                         <EditText
+                            android:inputType="text"
+                            android:id="@+id/username"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:drawableLeft="@drawable/ic_perm_identity"
@@ -82,9 +88,11 @@
                         android:layout_marginTop="4dp">
 
                         <EditText
+                            android:inputType="text"
+                            android:id="@+id/nsu_id"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/ic_id"
+                            android:drawableLeft="@drawable/ic_list"
                             android:drawablePadding="10dp"
                             android:hint="NSU ID"
                             android:textColor="#FFFFFF"
@@ -99,6 +107,8 @@
                         android:layout_marginTop="4dp">
 
                         <EditText
+                            android:inputType="textEmailAddress"
+                            android:id="@+id/email"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:drawableLeft="@drawable/ic_email"
@@ -116,6 +126,8 @@
                         android:layout_marginTop="4dp">
 
                         <EditText
+                            android:inputType="textPassword"
+                            android:id="@+id/pass"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:drawableLeft="@drawable/ic_lock"
@@ -133,6 +145,8 @@
                         android:layout_marginTop="4dp">
 
                         <EditText
+                            android:inputType="textPassword"
+                            android:id="@+id/pass_again"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:drawableLeft="@drawable/ic_lock"
@@ -150,6 +164,8 @@
                         android:layout_marginTop="4dp">
 
                         <EditText
+                            android:inputType="text"
+                            android:id="@+id/designation"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:drawableLeft="@drawable/ic_designation"
@@ -167,6 +183,8 @@
                         android:layout_marginTop="4dp">
 
                         <EditText
+                            android:inputType="phone"
+                            android:id="@+id/phone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:drawableLeft="@drawable/ic_phone_in_talk"
@@ -178,16 +196,15 @@
                     </android.support.design.widget.TextInputLayout>
 
 
-                        <TextView
+                        <Spinner
+                            android:id="@+id/catagory_spinner"
                             android:layout_marginTop="4dp"
                             android:layout_width="match_parent"
                             android:layout_height="30dp"
                             android:gravity="center_vertical"
                             android:textSize="18sp"
                             android:layout_marginLeft="5dp"
-                            android:drawableLeft="@drawable/ic_list"
                             android:drawablePadding="10dp"
-                            android:hint="Tap to Select Catagory"
                             android:enabled="false"
                             android:textColor="#FFFFFF"
                             android:textColorHint="#FFFFFF" />

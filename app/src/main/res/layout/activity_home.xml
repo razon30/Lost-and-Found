@@ -1,34 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <android.support.design.widget.TabLayout
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:id="@+id/tabLayout"
-            style="@style/TabLayoutStyle"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="?attr/colorPrimary" />
+            android:background="?attr/colorPrimary"
+            android:gravity="center"
+            android:orientation="horizontal">
 
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabLayout"
+                style="@style/TabLayoutStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="?attr/colorPrimary" />
+
+
+        </LinearLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp" />
 
     </LinearLayout>
 
-    <android.support.v4.view.ViewPager
-        android:layout_marginTop="10dp"
-        android:id="@+id/viewPager"
+    <razon.lostandfound.utils.Fab
+        android:id="@+id/fab"
+        style="@style/Widget.MaterialSheetFab.Fab"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp" />
+
+    <!-- Overlay that dims the screen -->
+    <com.gordonwong.materialsheetfab.DimOverlayFrameLayout
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Circular reveal container for the sheet -->
+    <io.codetail.widget.RevealLinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        android:gravity="end|bottom"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <!-- Sheet that contains your items -->
+        <android.support.v7.widget.CardView
+            android:id="@+id/fab_sheet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="20dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <razon.lostandfound.utils.MyTextView
+                    android:id="@+id/addlost"
+                    style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
+                    android:drawableLeft="@drawable/lost"
+                    android:drawableStart="@drawable/lost"
+                    android:gravity="center"
+                    android:text="Add Lost" />
+
+                <!-- Photo -->
+                <razon.lostandfound.utils.MyTextView
+                    android:id="@+id/addfound"
+                    style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
+                    android:drawableLeft="@drawable/found"
+                    android:drawableStart="@drawable/found"
+                    android:gravity="center"
+                    android:text="Add Found" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </io.codetail.widget.RevealLinearLayout>
+
+
+</RelativeLayout>

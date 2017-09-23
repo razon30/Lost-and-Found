@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/buttonOne"
     tools:context="razon.lostandfound.fragment.LostDetailsFragment">
 
     <LinearLayout
@@ -17,15 +18,17 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            app:cardBackgroundColor="@color/colorPrimary"
             app:cardElevation="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+               >
 
                 <LinearLayout
+                    android:padding="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -49,16 +52,14 @@
                             android:id="@+id/name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Md Razon Hossain"
-                            android:textColor="#09549b"
+                            android:textColor="#fff"
                             android:textSize="18sp" />
 
                         <razon.lostandfound.utils.MyTextView
                             android:id="@+id/username"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/username"
-                            android:textColor="#71340e"
+                            android:textColor="#fff"
                             android:textSize="16sp" />
 
                     </LinearLayout>
@@ -68,28 +69,82 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
                     <razon.lostandfound.utils.MyTextView
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
                         android:id="@+id/caption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="I have lost this phone yesterday from lab no 3, department of EEE"
-                        android:textColor="#201f1f"
+                        android:textColor="#fff"
                         android:textSize="16sp" />
 
                     <ImageView
                         android:id="@+id/product_image"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="300dp"
                         android:layout_marginTop="10dp"
-                        android:src="@drawable/phone_dummy" />
+                        android:scaleType="fitXY"
+                       />
 
                 </LinearLayout>
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            app:cardElevation="8dp">
+
+
+            <LinearLayout
+                android:id="@+id/addPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_marginLeft="15dp"
+                    android:layout_gravity="left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/chat"
+                    />
+
+                <razon.lostandfound.utils.MyTextView
+                    android:id="@+id/commentNumber"
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No Comments"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_gravity="center"
+                   />
+
+
+                <razon.lostandfound.utils.MyTextView
+                    android:layout_marginLeft="55dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add Comment"
+                    android:layout_gravity="center|right"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#be1a0e"
+                   />
+
+
+            </LinearLayout>
+
+            </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"

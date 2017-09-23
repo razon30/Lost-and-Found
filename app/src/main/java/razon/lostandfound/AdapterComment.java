@@ -1,7 +1,6 @@
 package razon.lostandfound;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,24 +15,23 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import razon.lostandfound.activity.MainActivity;
+import razon.lostandfound.model.Comments;
 import razon.lostandfound.model.FoundLostItem;
-import razon.lostandfound.utils.FragmentNode;
 import razon.lostandfound.utils.MyTextView;
-import razon.lostandfound.utils.SimpleActivityTransition;
 
 /**
  * Created by HP on 18-Aug-17.
  */
 
-public class AdapterLost extends RecyclerView.Adapter<AdapterLost.MyViewHolder> {
+public class AdapterComment extends RecyclerView.Adapter<AdapterComment.MyViewHolder> {
 
 
     LayoutInflater inflater;
     Activity context;
-    ArrayList<FoundLostItem> lostList = new ArrayList<>();
+    ArrayList<Comments> lostList = new ArrayList<>();
     String type;
 
-    public AdapterLost(Activity context, ArrayList<FoundLostItem> lostList, String type) {
+    public AdapterComment(Activity context, ArrayList<Comments> lostList, String type) {
         this.context = context;
         this.lostList = lostList;
         this.type = type;
@@ -42,13 +40,14 @@ public class AdapterLost extends RecyclerView.Adapter<AdapterLost.MyViewHolder> 
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new MyViewHolder(inflater.inflate(R.layout.item_lost, parent, false));
+        return new MyViewHolder(inflater.inflate(R.layout.item_comment, parent, false));
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
-        final FoundLostItem currentItem = lostList.get(position);
+
+        final Comments currentItem = lostList.get(position);
 
         holder.caption.setText(currentItem.getCaption());
         holder.name.setText(currentItem.getName());
@@ -64,21 +63,6 @@ public class AdapterLost extends RecyclerView.Adapter<AdapterLost.MyViewHolder> 
 
         }
 
-        holder.details.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent(context, MainActivity.class)
-                        .putExtra("type", type)
-                        .putExtra("id", currentItem.getId());
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-                context.overridePendingTransition(R.anim.slide_in_from_right, R.anim.fade_out);
-
-            }
-        });
-
     }
 
     @Override
@@ -93,8 +77,6 @@ public class AdapterLost extends RecyclerView.Adapter<AdapterLost.MyViewHolder> 
         public MyTextView username;
         public MyTextView caption;
         public ImageView productImage;
-        public MyTextView details;
-        public MyTextView chat;
 
 
         public MyViewHolder(View rootView) {
@@ -104,8 +86,7 @@ public class AdapterLost extends RecyclerView.Adapter<AdapterLost.MyViewHolder> 
             this.username = (MyTextView) rootView.findViewById(R.id.username);
             this.caption = (MyTextView) rootView.findViewById(R.id.caption);
             this.productImage = (ImageView) rootView.findViewById(R.id.product_image);
-            this.details = (MyTextView) rootView.findViewById(R.id.details);
-            this.chat = (MyTextView) rootView.findViewById(R.id.chat);
+
         }
     }
 

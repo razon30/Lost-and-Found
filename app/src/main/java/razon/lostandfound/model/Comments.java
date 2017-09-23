@@ -6,6 +6,8 @@ package razon.lostandfound.model;
 
 public class Comments {
 
+    public Comments(){};
+
     String username;
     String name;
     String caption;

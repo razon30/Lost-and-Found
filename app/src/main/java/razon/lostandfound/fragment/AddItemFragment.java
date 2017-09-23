@@ -35,9 +35,15 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import razon.lostandfound.R;
+import razon.lostandfound.activity.HomeActivity;
+import razon.lostandfound.activity.MainActivity;
+import razon.lostandfound.model.Comments;
 import razon.lostandfound.model.FoundLostItem;
+import razon.lostandfound.utils.FirebaseEndPoint;
+import razon.lostandfound.utils.FragmentNode;
 import razon.lostandfound.utils.MyEditText;
 import razon.lostandfound.utils.SharePreferenceSingleton;
+import razon.lostandfound.utils.SimpleActivityTransition;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,6 +55,7 @@ public class AddItemFragment extends Fragment {
     private ImageView productImage;
     private LinearLayout addPhoto;
     private CardView submit;
+    private CardView cancel;
     private static final int RESULT_CANCELED = 0;
     private int GALLERY = 1, CAMERA = 2;
 
@@ -71,6 +78,13 @@ public class AddItemFragment extends Fragment {
 
                 showPictureDialog();
 
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
             }
         });
 
@@ -190,6 +204,7 @@ public class AddItemFragment extends Fragment {
         productImage = (ImageView) view.findViewById(R.id.product_image);
         addPhoto = (LinearLayout) view.findViewById(R.id.addPhoto);
         submit = (CardView) view.findViewById(R.id.submit);
+        cancel = (CardView) view.findViewById(R.id.cancel);
 
         progressDialog = new ProgressDialog(getActivity());
     }
@@ -206,13 +221,74 @@ public class AddItemFragment extends Fragment {
        if (imageByte.equals("2")){
 
            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-           thumbnail.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
+           thumbnail.compress(Bitmap.CompressFormat.JPEG, 20, byteArrayOutputStream);
            byte[] byteArray = byteArrayOutputStream .toByteArray();
            imageByte = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
        }
 
-        getItemID(captionString);
+       if (getActivity().getIntent().getStringExtra("id") == null) {
+           getItemID(captionString);
+       }else {
+
+           getCommentID(captionString,getActivity().getIntent().getStringExtra("id"));
+
+       }
+
+    }
+
+    private void getCommentID(final String captionString, String id) {
+
+        final String[] mId = new String[1];
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(FirebaseEndPoint.COMMENT_ID_GENERATE);
+        final int[] c = {0};
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                mId[0] = dataSnapshot.child("Count").getValue().toString();
+                if (c[0] == 0) {
+                    c[0] = 1;
+                    addComment(captionString,getActivity().getIntent().getStringExtra("id"), mId[0]);
+
+                }
+
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void addComment(String captionString, String id, String commentId) {
+
+        String username = SharePreferenceSingleton.getInstance(getActivity()).getString("username");
+        String name = SharePreferenceSingleton.getInstance(getActivity()).getString("name");
+
+        Comments comments = new Comments(username, name, captionString, imageByte);
+        DatabaseReference usernameRefMeeting = FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseEndPoint.COMMENT).child(id).child(commentId);
+        usernameRefMeeting.setValue(comments);
+
+        FirebaseDatabase countData = FirebaseDatabase.getInstance();
+        DatabaseReference countDataRefMeeting = countData.getReference(FirebaseEndPoint.COMMENT_ID_GENERATE).child("Count");
+        commentId = String.valueOf(Integer.valueOf(commentId)+1);
+        countDataRefMeeting.setValue(commentId);
+
+        Intent intent = new Intent(getActivity(), MainActivity.class)
+                .putExtra("type", getActivity().getIntent().getStringExtra("itemType"))
+                .putExtra("id", id);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        getActivity().startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.slide_in_from_right, R.anim.fade_out);
+        getActivity().finish();
 
     }
 
@@ -220,7 +296,7 @@ public class AddItemFragment extends Fragment {
 
         final String[] mId = new String[1];
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(status+"ID");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(FirebaseEndPoint.LOST_ID_GENERATE);
         final int[] c = {0};
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -255,19 +331,20 @@ public class AddItemFragment extends Fragment {
                 .child("UserData").child(username).child(status).child("id"+itemId);
         usernameRefMeeting.setValue(itemId);
 
-        Log.d("imageByte", imageByte);
-
         FoundLostItem foundLostItem = new FoundLostItem(itemId, username, name, captionString, imageByte);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference emailRefCount = database.getReference().child(status).child(itemId);
         emailRefCount.setValue(foundLostItem);
 
         FirebaseDatabase countData = FirebaseDatabase.getInstance();
-        DatabaseReference countDataRefMeeting = countData.getReference(status+"ID").child("Count");
+        DatabaseReference countDataRefMeeting = countData.getReference(FirebaseEndPoint.LOST_ID_GENERATE).child("Count");
         itemId = String.valueOf(Integer.valueOf(itemId)+1);
         countDataRefMeeting.setValue(itemId);
 
         progressDialog.dismiss();
+
+        SimpleActivityTransition.goToPreviousActivity(getActivity(), HomeActivity.class);
+        getActivity().finish();
 
     }
 

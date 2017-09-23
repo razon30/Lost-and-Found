@@ -16,6 +16,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (SharePreferenceSingleton.getInstance(this).getString("user").equals("1")){
             SimpleActivityTransition.goToNextActivity(this, HomeActivity.class);
+            finish();
         }else {
 
             setContentView(R.layout.activity_login);

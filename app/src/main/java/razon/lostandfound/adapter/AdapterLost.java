@@ -1,10 +1,10 @@
-package razon.lostandfound;
+package razon.lostandfound.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -15,11 +15,10 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import razon.lostandfound.R;
 import razon.lostandfound.activity.MainActivity;
 import razon.lostandfound.model.FoundLostItem;
-import razon.lostandfound.utils.FragmentNode;
 import razon.lostandfound.utils.MyTextView;
-import razon.lostandfound.utils.SimpleActivityTransition;
 
 /**
  * Created by HP on 18-Aug-17.
@@ -53,15 +52,37 @@ public class AdapterLost extends RecyclerView.Adapter<AdapterLost.MyViewHolder> 
         holder.caption.setText(currentItem.getCaption());
         holder.name.setText(currentItem.getName());
         holder.username.setText(currentItem.getUsername());
+        holder.date.setText(currentItem.getTime());
+
+        String proPic = currentItem.getProPic();
+        if (!proPic.equals("1")){
+
+            byte[] data = Base64.decode(proPic, Base64.DEFAULT);
+
+            final Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+            holder.profileImage.setImageBitmap(bmp);
+
+        }else {
+            holder.profileImage.setImageResource(R.drawable.profile_dummy);
+        }
 
         String image = currentItem.getImage();
         if (!image.equals("1")){
             byte[] data = Base64.decode(image, Base64.DEFAULT);
 
-            Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+            final Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
             holder.productImage.setImageBitmap(bmp);
 
+            holder.productImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showImage(bmp);
+                }
+            });
 
+
+        }else {
+            holder.productImage.setVisibility(View.GONE);
         }
 
         holder.details.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +102,29 @@ public class AdapterLost extends RecyclerView.Adapter<AdapterLost.MyViewHolder> 
 
     }
 
+    private void showImage(Bitmap data) {
+
+        View view = context.getLayoutInflater().inflate(R.layout.image_view_layout, null);
+        ImageView imageView = (ImageView) view.findViewById(R.id.image);
+        ImageView cancel = (ImageView) view.findViewById(R.id.cancel);
+        imageView.setMinimumHeight(context.getWindowManager().getDefaultDisplay().getHeight());
+        imageView.setMinimumWidth(context.getWindowManager().getDefaultDisplay().getWidth());
+        imageView.setImageBitmap(data);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setView(view);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+
+    }
+
     @Override
     public int getItemCount() {
         return lostList.size();
@@ -95,6 +139,7 @@ public class AdapterLost extends RecyclerView.Adapter<AdapterLost.MyViewHolder> 
         public ImageView productImage;
         public MyTextView details;
         public MyTextView chat;
+        public MyTextView date;
 
 
         public MyViewHolder(View rootView) {
@@ -106,6 +151,7 @@ public class AdapterLost extends RecyclerView.Adapter<AdapterLost.MyViewHolder> 
             this.productImage = (ImageView) rootView.findViewById(R.id.product_image);
             this.details = (MyTextView) rootView.findViewById(R.id.details);
             this.chat = (MyTextView) rootView.findViewById(R.id.chat);
+            this.date = (MyTextView) rootView.findViewById(R.id.date);
         }
     }
 

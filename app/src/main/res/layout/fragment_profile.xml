@@ -1,13 +1,288 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#e9e4e4"
     tools:context="razon.lostandfound.fragment.ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
 
-</FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="50dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/profile_dummy" />
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/change_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="8dp"
+                    android:layout_margin="8dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    android:layout_alignBottom="@+id/profile_image"
+                    android:layout_alignRight="@+id/profile_image">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/change_photo" />
+
+                </android.support.v7.widget.CardView>
+
+
+            </RelativeLayout>
+
+            <razon.lostandfound.utils.MyTextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:text="Md Razon Hossain"
+                android:textColor="#FFF"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="15dp"
+                android:orientation="horizontal">
+
+                <razon.lostandfound.utils.MyTextView
+                    android:id="@+id/username"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="5"
+                    android:gravity="right"
+                    android:text="razon501"
+                    android:textColor="#FFF"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <razon.lostandfound.utils.MyTextView
+                    android:id="@+id/catagory"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="5"
+                    android:gravity="left"
+                    android:text="Student"
+                    android:textColor="#FFF"
+                    android:textSize="16sp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="30dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <razon.lostandfound.utils.MyTextView
+                        android:id="@+id/found_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circular_found"
+                        android:gravity="center"
+                        android:text="58"
+                        android:textColor="#FFF"
+                        android:textSize="40sp" />
+
+                    <razon.lostandfound.utils.MyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Found Posted"
+                        android:textColor="#FFF"
+                        android:textSize="16sp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <razon.lostandfound.utils.MyTextView
+                        android:id="@+id/lost_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circular_lost"
+                        android:gravity="center"
+                        android:text="28"
+                        android:textColor="#FFF"
+                        android:textSize="40sp" />
+
+                    <razon.lostandfound.utils.MyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Lost Posted"
+                        android:textColor="#FFF"
+                        android:textSize="16sp" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="20dp"
+            app:cardBackgroundColor="#FFF"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
+
+                <razon.lostandfound.utils.MyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email"
+                    android:textColor="#0091EA"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
+
+                <razon.lostandfound.utils.MyTextView
+                    android:id="@+id/email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:text="deadmantheimmortal@northsouth.edu"
+                    android:textColor="#212121"
+                    android:textSize="18sp" />
+
+                <razon.lostandfound.utils.MyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NSU ID"
+                    android:textColor="#0091EA"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
+
+                <razon.lostandfound.utils.MyTextView
+                    android:id="@+id/nsu_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:text="1236548932655"
+                    android:textColor="#212121"
+                    android:textSize="18sp" />
+
+                <razon.lostandfound.utils.MyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone Number"
+                    android:textColor="#0091EA"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
+
+                <razon.lostandfound.utils.MyTextView
+                    android:id="@+id/phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:text="01265479662"
+                    android:textColor="#212121"
+                    android:textSize="18sp" />
+
+                <razon.lostandfound.utils.MyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Designation"
+                    android:textColor="#0091EA"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
+
+                <razon.lostandfound.utils.MyTextView
+                    android:id="@+id/designation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Student (3rd semester)"
+                    android:textColor="#212121"
+                    android:textSize="18sp" />
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/logout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="#F44336"
+                    app:cardElevation="4dp"
+                   android:layout_marginTop="15dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_gravity="right">
+
+                    <razon.lostandfound.utils.MyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Log Out"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"/>
+
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

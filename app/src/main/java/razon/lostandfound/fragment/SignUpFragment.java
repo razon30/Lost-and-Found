@@ -92,7 +92,7 @@ public class SignUpFragment extends Fragment {
 
                 submit();
 
-              //  getActivity().startActivity(new Intent(getActivity(), HomeActivity.class));
+              //  getActivity().startActivity(new_item Intent(getActivity(), HomeActivity.class));
 
             }
         });
@@ -224,6 +224,7 @@ public class SignUpFragment extends Fragment {
 
                             SharePreferenceSingleton.getInstance(getActivity()).saveString("user","1");
                             SharePreferenceSingleton.getInstance(getActivity()).saveString("username",usernameString);
+                            SharePreferenceSingleton.getInstance(getActivity()).saveString("propic","1");
 
                             DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference()
                                     .child("UserData").child(usernameString).child("generalInfo");

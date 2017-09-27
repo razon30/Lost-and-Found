@@ -32,7 +32,7 @@
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp" />
+            />
 
     </LinearLayout>
 
@@ -73,8 +73,8 @@
                 <razon.lostandfound.utils.MyTextView
                     android:id="@+id/addlost"
                     style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
-                    android:drawableLeft="@drawable/lost"
-                    android:drawableStart="@drawable/lost"
+                    android:drawableLeft="@drawable/lost_lost"
+                    android:drawableStart="@drawable/lost_lost"
                     android:gravity="center"
                     android:text="Add Lost" />
 
@@ -82,8 +82,8 @@
                 <razon.lostandfound.utils.MyTextView
                     android:id="@+id/addfound"
                     style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
-                    android:drawableLeft="@drawable/found"
-                    android:drawableStart="@drawable/found"
+                    android:drawableLeft="@drawable/found_found"
+                    android:drawableStart="@drawable/found_found"
                     android:gravity="center"
                     android:text="Add Found" />
 

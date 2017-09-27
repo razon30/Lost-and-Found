@@ -12,12 +12,32 @@ public class Comments {
     String name;
     String caption;
     String image;
+    String time;
+    String proPic;
 
-    public Comments(String username, String name, String caption, String image) {
+    public Comments(String username, String name, String caption, String image, String time, String proPic) {
         this.username = username;
         this.name = name;
         this.caption = caption;
         this.image = image;
+        this.time = time;
+        this.proPic = proPic;
+    }
+
+    public String getProPic() {
+        return proPic;
+    }
+
+    public void setProPic(String proPic) {
+        this.proPic = proPic;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getUsername() {

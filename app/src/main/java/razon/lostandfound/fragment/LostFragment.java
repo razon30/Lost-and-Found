@@ -19,8 +19,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
-import razon.lostandfound.AdapterLost;
+import razon.lostandfound.adapter.AdapterLost;
 import razon.lostandfound.R;
 import razon.lostandfound.model.FoundLostItem;
 import razon.lostandfound.utils.FirebaseEndPoint;
@@ -82,6 +83,7 @@ public class LostFragment extends Fragment {
                     recyclerView.setVisibility(View.GONE);
                     no_item.setVisibility(View.VISIBLE);
                 } else {
+                    Collections.reverse(lostList);
                     recyclerView.setVisibility(View.VISIBLE);
                     no_item.setVisibility(View.GONE);
                 }

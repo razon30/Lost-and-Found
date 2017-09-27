@@ -2,7 +2,11 @@ package razon.lostandfound.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -11,6 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.view.View;
 
 import com.google.firebase.database.DataSnapshot;
@@ -29,6 +34,7 @@ import razon.lostandfound.fragment.NotificationFragment;
 import razon.lostandfound.fragment.ProfileFragment;
 import razon.lostandfound.model.UserGeneralInfo;
 import razon.lostandfound.utils.Fab;
+import razon.lostandfound.utils.FirebaseEndPoint;
 import razon.lostandfound.utils.FragmentNode;
 import razon.lostandfound.utils.SharePreferenceSingleton;
 
@@ -40,8 +46,10 @@ public class HomeActivity extends AppCompatActivity {
     private int statusBarColor;
 
     ValueEventListener valueEventListener;
-
     DatabaseReference reference;
+
+    public static UserGeneralInfo userGeneralInfo;
+    Bitmap bmp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,10 +149,23 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                UserGeneralInfo generalInfo = dataSnapshot.child("generalInfo").getValue(UserGeneralInfo.class);
-                if (generalInfo != null) {
-                    SharePreferenceSingleton.getInstance(HomeActivity.this).saveString("name",generalInfo.getName());
+                userGeneralInfo = dataSnapshot.child("generalInfo").getValue(UserGeneralInfo.class);
+                if (userGeneralInfo != null) {
+                    SharePreferenceSingleton.getInstance(HomeActivity.this).saveString("name",userGeneralInfo.getName());
                 }
+
+                if (dataSnapshot.hasChild(FirebaseEndPoint.IMAGE)) {
+                    String image = dataSnapshot.child(FirebaseEndPoint.IMAGE).getValue().toString();
+                    byte[] data = Base64.decode(image, Base64.DEFAULT);
+
+                    bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+//                    profileImage.setImageBitmap(bmp);
+
+                    SharePreferenceSingleton.getInstance(HomeActivity.this).saveString("propic",image);
+
+
+                }
+
             }
 
             @Override
@@ -184,7 +205,12 @@ public class HomeActivity extends AppCompatActivity {
         TabLayout.Tab foundTab = tabLayout.getTabAt(1);
         foundTab.setIcon(R.drawable.found_icon);
         TabLayout.Tab earningTab = tabLayout.getTabAt(2);
-        earningTab.setIcon(R.drawable.profile_icon);
+        if (bmp==null) {
+            earningTab.setIcon(R.drawable.profile_icon);
+        }else {
+            Drawable d = new BitmapDrawable(getResources(), bmp);
+            earningTab.setIcon(d);
+        }
         TabLayout.Tab ratingsTab = tabLayout.getTabAt(3);
         ratingsTab.setIcon(R.drawable.notification_icon);
         TabLayout.Tab accountTab = tabLayout.getTabAt(4);

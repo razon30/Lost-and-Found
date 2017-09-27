@@ -1,9 +1,9 @@
-package razon.lostandfound;
+package razon.lostandfound.adapter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -14,9 +14,8 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import razon.lostandfound.activity.MainActivity;
+import razon.lostandfound.R;
 import razon.lostandfound.model.Comments;
-import razon.lostandfound.model.FoundLostItem;
 import razon.lostandfound.utils.MyTextView;
 
 /**
@@ -52,18 +51,63 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.MyViewHo
         holder.caption.setText(currentItem.getCaption());
         holder.name.setText(currentItem.getName());
         holder.username.setText(currentItem.getUsername());
+        holder.date.setText(currentItem.getTime());
+
+        String proPic = currentItem.getProPic();
+        if (!proPic.equals("1")){
+
+            byte[] data = Base64.decode(proPic, Base64.DEFAULT);
+
+            final Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+            holder.profileImage.setImageBitmap(bmp);
+
+        }else {
+            holder.profileImage.setImageResource(R.drawable.profile_dummy);
+        }
 
         String image = currentItem.getImage();
         if (!image.equals("1")){
             byte[] data = Base64.decode(image, Base64.DEFAULT);
 
-            Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+            final Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
             holder.productImage.setImageBitmap(bmp);
 
+            holder.productImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showImage(bmp);
+                }
+            });
 
+        }else {
+            holder.productImage.setVisibility(View.GONE);
         }
 
     }
+
+    private void showImage(Bitmap data) {
+
+        View view = context.getLayoutInflater().inflate(R.layout.image_view_layout, null);
+        ImageView imageView = (ImageView) view.findViewById(R.id.image);
+        ImageView cancel = (ImageView) view.findViewById(R.id.cancel);
+        imageView.setMinimumHeight(context.getWindowManager().getDefaultDisplay().getHeight());
+        imageView.setMinimumWidth(context.getWindowManager().getDefaultDisplay().getWidth());
+        imageView.setImageBitmap(data);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setView(view);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+
+    }
+
 
     @Override
     public int getItemCount() {
@@ -76,6 +120,7 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.MyViewHo
         public MyTextView name;
         public MyTextView username;
         public MyTextView caption;
+        public MyTextView date;
         public ImageView productImage;
 
 
@@ -85,6 +130,7 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.MyViewHo
             this.name = (MyTextView) rootView.findViewById(R.id.name);
             this.username = (MyTextView) rootView.findViewById(R.id.username);
             this.caption = (MyTextView) rootView.findViewById(R.id.caption);
+            this.date = (MyTextView) rootView.findViewById(R.id.date);
             this.productImage = (ImageView) rootView.findViewById(R.id.product_image);
 
         }

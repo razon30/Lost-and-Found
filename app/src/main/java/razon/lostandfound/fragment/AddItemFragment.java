@@ -33,6 +33,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import razon.lostandfound.R;
 import razon.lostandfound.activity.HomeActivity;
@@ -270,8 +272,14 @@ public class AddItemFragment extends Fragment {
 
         String username = SharePreferenceSingleton.getInstance(getActivity()).getString("username");
         String name = SharePreferenceSingleton.getInstance(getActivity()).getString("name");
+        String proPic = SharePreferenceSingleton.getInstance(getActivity()).getString("propic");
 
-        Comments comments = new Comments(username, name, captionString, imageByte);
+
+        SimpleDateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm a");
+        Date date = new Date();
+        String dateReadable = format.format(date);
+
+        Comments comments = new Comments(username, name, captionString, imageByte, dateReadable, proPic);
         DatabaseReference usernameRefMeeting = FirebaseDatabase.getInstance().getReference()
                 .child(FirebaseEndPoint.COMMENT).child(id).child(commentId);
         usernameRefMeeting.setValue(comments);
@@ -325,13 +333,17 @@ public class AddItemFragment extends Fragment {
 
         String username = SharePreferenceSingleton.getInstance(getActivity()).getString("username");
         String name = SharePreferenceSingleton.getInstance(getActivity()).getString("name");
-
+        String proPic = SharePreferenceSingleton.getInstance(getActivity()).getString("propic");
 
         DatabaseReference usernameRefMeeting = FirebaseDatabase.getInstance().getReference()
                 .child("UserData").child(username).child(status).child("id"+itemId);
         usernameRefMeeting.setValue(itemId);
 
-        FoundLostItem foundLostItem = new FoundLostItem(itemId, username, name, captionString, imageByte);
+        SimpleDateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm a");
+        Date date = new Date();
+        String dateReadable = format.format(date);
+
+        FoundLostItem foundLostItem = new FoundLostItem(itemId, username, name, captionString, imageByte, dateReadable, proPic);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference emailRefCount = database.getReference().child(status).child(itemId);
         emailRefCount.setValue(foundLostItem);

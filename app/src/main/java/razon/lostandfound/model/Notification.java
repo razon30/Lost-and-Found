@@ -10,6 +10,7 @@ public class Notification {
     String status;
     String noti;
 
+
     public Notification(String itemID, String status, String noti) {
         this.itemID = itemID;
         this.status = status;

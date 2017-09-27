@@ -13,13 +13,33 @@ public class FoundLostItem {
     String name;
     String caption;
     String image;
+    String time;
+    String proPic;
 
-    public FoundLostItem(String id, String username, String name, String caption, String image) {
+    public FoundLostItem(String id, String username, String name, String caption, String image, String time, String proPic) {
         this.id = id;
         this.username = username;
         this.name = name;
         this.caption = caption;
         this.image = image;
+        this.time = time;
+        this.proPic = proPic;
+    }
+
+    public String getProPic() {
+        return proPic;
+    }
+
+    public void setProPic(String proPic) {
+        this.proPic = proPic;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getId() {

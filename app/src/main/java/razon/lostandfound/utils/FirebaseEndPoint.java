@@ -12,6 +12,7 @@ public class FirebaseEndPoint {
     public static final String FOUND = "found";
     public static final String LOST = "lost";
     public static final String COMMENT = "comment";
+    public static final String IMAGE = "image";
 
     public static final String COMMENT_ID_GENERATE = "commentID";
     public static final String LOST_ID_GENERATE = "lostID";

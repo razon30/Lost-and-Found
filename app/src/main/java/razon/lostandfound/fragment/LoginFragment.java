@@ -63,7 +63,7 @@ public class LoginFragment extends Fragment {
             public void onClick(View view) {
 
                 submit();
-                // getActivity().startActivity(new Intent(getActivity(), HomeActivity.class));
+                // getActivity().startActivity(new_item Intent(getActivity(), HomeActivity.class));
 
             }
         });
@@ -115,6 +115,7 @@ public class LoginFragment extends Fragment {
 
                             SharePreferenceSingleton.getInstance(getActivity()).saveString("user","1");
                             SharePreferenceSingleton.getInstance(getActivity()).saveString("username",usernameString);
+                            SharePreferenceSingleton.getInstance(getActivity()).saveString("propic","1");
 
                             progressDialog.dismiss();
                             startActivity(new Intent(getActivity(), HomeActivity.class));

@@ -53,6 +53,7 @@ public class Fab extends FloatingActionButton implements AnimatedFab {
         // Set FAB's translation
         setTranslation(translationX, translationY);
 
+
         // Only use scale animation if FAB is hidden
         if (getVisibility() != View.VISIBLE) {
             // Pivots indicate where the animation begins from

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
@@ -24,9 +25,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import razon.lostandfound.AdapterComment;
+import razon.lostandfound.adapter.AdapterComment;
 import razon.lostandfound.R;
 import razon.lostandfound.activity.MainActivity;
 import razon.lostandfound.model.Comments;
@@ -51,6 +53,7 @@ public class FoundDetailsFragment extends Fragment {
     private MyTextView name;
     private MyTextView username;
     private MyTextView caption;
+    private MyTextView date;
     private ImageView productImage;
     MyTextView commentNumber;
 
@@ -68,13 +71,15 @@ public class FoundDetailsFragment extends Fragment {
 
     private LinearLayout addComment;
 
+    View mainView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_lost_details, container, false);
+        mainView = inflater.inflate(R.layout.fragment_lost_details, container, false);
         id = getActivity().getIntent().getStringExtra("id");
-        initView(view);
+        initView(mainView);
         populateDetails();
         populateComments();
 
@@ -94,7 +99,7 @@ public class FoundDetailsFragment extends Fragment {
             }
         });
 
-        return view;
+        return mainView;
     }
 
     private void populateComments() {
@@ -112,7 +117,7 @@ public class FoundDetailsFragment extends Fragment {
 
                 }
 
-                adaoterComment.notifyDataSetChanged();
+
                 if (progressDialouge !=null) {
                     progressDialouge.dismiss();
                 }
@@ -120,8 +125,11 @@ public class FoundDetailsFragment extends Fragment {
                 if (commentList.size() == 0){
                     commentNumber.setText("No Comments");
                 }else {
+                    Collections.reverse(commentList);
                     commentNumber.setText(commentList.size()+" Comments");
                 }
+
+                adaoterComment.notifyDataSetChanged();
 
             }
 
@@ -148,14 +156,36 @@ public class FoundDetailsFragment extends Fragment {
                     name.setText(curretnItem.getName());
                     username.setText(curretnItem.getUsername());
                     caption.setText(curretnItem.getCaption());
+                    date.setText(curretnItem.getTime());
+
+                    String proPic = curretnItem.getProPic();
+                    if (!proPic.equals("1")){
+
+                        byte[] data = Base64.decode(proPic, Base64.DEFAULT);
+
+                        final Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+                        profileImage.setImageBitmap(bmp);
+
+                    }else {
+                        profileImage.setImageResource(R.drawable.profile_dummy);
+                    }
+
                     String image = curretnItem.getImage();
                     if (!image.equals("1")) {
                         byte[] data = Base64.decode(image, Base64.DEFAULT);
 
-                        Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+                        final Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
                         productImage.setImageBitmap(bmp);
                         productImage.setVisibility(View.VISIBLE);
 
+                        showImage(bmp);
+
+                        productImage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                showImage(bmp);
+                            }
+                        });
 
                     } else {
                         productImage.setVisibility(View.GONE);
@@ -176,6 +206,30 @@ public class FoundDetailsFragment extends Fragment {
 
     }
 
+    private void showImage(Bitmap data) {
+
+        View view = getActivity().getLayoutInflater().inflate(R.layout.image_view_layout, null);
+        ImageView imageView = (ImageView) view.findViewById(R.id.image);
+        ImageView cancel = (ImageView) view.findViewById(R.id.cancel);
+        imageView.setMinimumHeight(mainView.getHeight());
+        imageView.setMinimumWidth(mainView.getWidth());
+        imageView.setImageBitmap(data);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setView(view);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+
+
+    }
+
 
     private void initView(View view) {
         addComment = (LinearLayout) view.findViewById(R.id.addPhoto);
@@ -183,6 +237,7 @@ public class FoundDetailsFragment extends Fragment {
         name = (MyTextView) view.findViewById(R.id.name);
         username = (MyTextView) view.findViewById(R.id.username);
         caption = (MyTextView) view.findViewById(R.id.caption);
+        date = (MyTextView) view.findViewById(R.id.date);
         commentNumber = (MyTextView) view.findViewById(R.id.commentNumber);
         productImage = (ImageView) view.findViewById(R.id.product_image);
         commentRecycler = (RecyclerView) view.findViewById(R.id.commentRecycler);

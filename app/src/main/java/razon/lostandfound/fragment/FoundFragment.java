@@ -19,8 +19,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
-import razon.lostandfound.AdapterLost;
+import razon.lostandfound.adapter.AdapterLost;
 import razon.lostandfound.R;
 import razon.lostandfound.model.FoundLostItem;
 import razon.lostandfound.utils.FirebaseEndPoint;
@@ -69,7 +70,7 @@ public class FoundFragment extends Fragment {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
 
                     lostList.add(postSnapshot.getValue(FoundLostItem.class));
-                    adapter.notifyDataSetChanged();
+
                     Log.d("size", postSnapshot.getValue()+"");
 
                 }
@@ -78,9 +79,13 @@ public class FoundFragment extends Fragment {
                     recyclerView.setVisibility(View.GONE);
                     no_item.setVisibility(View.VISIBLE);
                 } else {
+                    Collections.reverse(lostList);
                     recyclerView.setVisibility(View.VISIBLE);
                     no_item.setVisibility(View.GONE);
                 }
+
+                adapter.notifyDataSetChanged();
+                progressDialouge.dismiss();
             }
 
             @Override
@@ -90,7 +95,7 @@ public class FoundFragment extends Fragment {
         };
 
         databaseReference.addValueEventListener(valueEventListener);
-        progressDialouge.dismiss();
+
     }
 
     @Override

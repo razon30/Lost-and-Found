@@ -49,6 +49,9 @@ public class FoundDetailsFragment extends Fragment {
 
 
     String id;
+    String postedBy = "1";
+    String postedTime = "1";
+
     private CircleImageView profileImage;
     private MyTextView name;
     private MyTextView username;
@@ -61,6 +64,7 @@ public class FoundDetailsFragment extends Fragment {
     AdapterComment adaoterComment;
     LinearLayoutManager layoutManager;
     ArrayList<Comments> commentList;
+    ArrayList<String> userNameList;
 
 
     DatabaseReference databaseReference;
@@ -90,7 +94,10 @@ public class FoundDetailsFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), MainActivity.class)
                         .putExtra("type", FragmentNode.ADD_ITEM)
                         .putExtra("id", id)
-                        .putExtra("itemType", FragmentNode.FOUND);
+                        .putExtra("itemType", FragmentNode.FOUND)
+                        .putExtra("postedBy", postedBy)
+                        .putExtra("postTime", postedTime)
+                        .putStringArrayListExtra("userlist", userNameList);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 getActivity().startActivity(intent);
@@ -112,7 +119,7 @@ public class FoundDetailsFragment extends Fragment {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                     commentList.add(postSnapshot.getValue(Comments.class));
-
+                    userNameList.add(postSnapshot.getValue(Comments.class).getUsername());
                     Log.d("size", postSnapshot.getValue() + "");
 
                 }
@@ -157,7 +164,8 @@ public class FoundDetailsFragment extends Fragment {
                     username.setText(curretnItem.getUsername());
                     caption.setText(curretnItem.getCaption());
                     date.setText(curretnItem.getTime());
-
+                    postedBy = curretnItem.getUsername();
+                    postedTime = curretnItem.getTime();
                     String proPic = curretnItem.getProPic();
                     if (!proPic.equals("1")){
 
@@ -246,7 +254,7 @@ public class FoundDetailsFragment extends Fragment {
         adaoterComment = new AdapterComment(getActivity(), commentList, FirebaseEndPoint.COMMENT);
         commentRecycler.setLayoutManager(layoutManager);
         commentRecycler.setAdapter(adaoterComment);
-
+        userNameList = new ArrayList<>();
         progressDialouge = new ProgressDialog(getActivity());
         progressDialouge.setMessage("Please Wait...");
         progressDialouge.show();

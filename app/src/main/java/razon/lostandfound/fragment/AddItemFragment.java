@@ -34,13 +34,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 
 import razon.lostandfound.R;
 import razon.lostandfound.activity.HomeActivity;
 import razon.lostandfound.activity.MainActivity;
 import razon.lostandfound.model.Comments;
 import razon.lostandfound.model.FoundLostItem;
+import razon.lostandfound.model.Notification;
 import razon.lostandfound.utils.FirebaseEndPoint;
 import razon.lostandfound.utils.FragmentNode;
 import razon.lostandfound.utils.MyEditText;
@@ -93,24 +96,22 @@ public class AddItemFragment extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressDialog.setMessage("Please Wait...");
-                progressDialog.show();
+
                 submit();
 
             }
         });
 
 
-
         return view;
     }
 
-    private void showPictureDialog(){
+    private void showPictureDialog() {
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(getActivity());
         pictureDialog.setTitle("Select Action");
         String[] pictureDialogItems = {
                 "Select photo from gallery",
-                "Capture photo from camera" };
+                "Capture photo from camera"};
         pictureDialog.setItems(pictureDialogItems,
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -193,7 +194,6 @@ public class AddItemFragment extends Fragment {
         }
 
 
-
         return getBitmap;
     }
 
@@ -220,27 +220,29 @@ public class AddItemFragment extends Fragment {
             return;
         }
 
-       if (imageByte.equals("2")){
+        if (imageByte.equals("2")) {
 
-           ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-           thumbnail.compress(Bitmap.CompressFormat.JPEG, 20, byteArrayOutputStream);
-           byte[] byteArray = byteArrayOutputStream .toByteArray();
-           imageByte = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 20, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            imageByte = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-       }
+        }
 
-       if (getActivity().getIntent().getStringExtra("id") == null) {
-           getItemID(captionString);
-       }else {
+        if (getActivity().getIntent().getStringExtra("id") == null) {
+            getItemID(captionString);
+        } else {
 
-           getCommentID(captionString,getActivity().getIntent().getStringExtra("id"));
+            getCommentID(captionString, getActivity().getIntent().getStringExtra("id"));
 
-       }
+        }
 
     }
 
     private void getCommentID(final String captionString, String id) {
 
+        progressDialog.setMessage("Please Wait...");
+        progressDialog.show();
         final String[] mId = new String[1];
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(FirebaseEndPoint.COMMENT_ID_GENERATE);
@@ -253,7 +255,7 @@ public class AddItemFragment extends Fragment {
                 mId[0] = dataSnapshot.child("Count").getValue().toString();
                 if (c[0] == 0) {
                     c[0] = 1;
-                    addComment(captionString,getActivity().getIntent().getStringExtra("id"), mId[0]);
+                    addComment(captionString, getActivity().getIntent().getStringExtra("id"), mId[0]);
 
                 }
 
@@ -284,11 +286,14 @@ public class AddItemFragment extends Fragment {
                 .child(FirebaseEndPoint.COMMENT).child(id).child(commentId);
         usernameRefMeeting.setValue(comments);
 
+        setNotification(comments, id);
+
         FirebaseDatabase countData = FirebaseDatabase.getInstance();
         DatabaseReference countDataRefMeeting = countData.getReference(FirebaseEndPoint.COMMENT_ID_GENERATE).child("Count");
-        commentId = String.valueOf(Integer.valueOf(commentId)+1);
+        commentId = String.valueOf(Integer.valueOf(commentId) + 1);
         countDataRefMeeting.setValue(commentId);
 
+        progressDialog.dismiss();
         Intent intent = new Intent(getActivity(), MainActivity.class)
                 .putExtra("type", getActivity().getIntent().getStringExtra("itemType"))
                 .putExtra("id", id);
@@ -300,7 +305,102 @@ public class AddItemFragment extends Fragment {
 
     }
 
+    private void setNotification(Comments comments, String id) {
+
+        ArrayList<String> userNameList = new ArrayList<>();
+        userNameList = getActivity().getIntent().getStringArrayListExtra("userlist");
+        HashSet<String> hashSet = new HashSet<>(userNameList);
+        userNameList.clear();
+        userNameList.addAll(hashSet);
+        if (comments.getUsername().equals(getActivity().getIntent().getStringExtra("postedBy"))) {
+
+            if (userNameList.contains(comments.getUsername())){
+                userNameList.remove(userNameList.indexOf(comments.getUsername()));
+            }
+
+        }else {
+
+            userNameList.add(getActivity().getIntent().getStringExtra("postedBy"));
+
+        }
+
+        String username = SharePreferenceSingleton.getInstance(getActivity()).getString("username");
+
+        if (userNameList.contains(username)){
+            userNameList.remove(userNameList.indexOf(username));
+        }
+
+
+        Log.d("count", userNameList.size() + "");
+
+        for (int i = 0; i < userNameList.size(); i++) {
+
+          //  if (!userNameList.get(i).equals(getActivity().getIntent().getStringExtra("postedBy"))) {
+
+                String notifiedUserName = userNameList.get(i);
+                Notification notification = new Notification();
+                notification.setCommentedBy(comments.getUsername());
+                notification.setItemID(id);
+                if (getActivity().getIntent().getStringExtra("postedBy") == null) {
+                    notification.setPostedBy("Someone");
+                } else {
+                    notification.setPostedBy(getActivity().getIntent().getStringExtra("postedBy"));
+                }
+
+                if (getActivity().getIntent().getStringExtra("postTime") == null) {
+                    notification.setPostDate("Someday");
+                } else {
+                    notification.setPostDate(getActivity().getIntent().getStringExtra("postTime"));
+                }
+                if (getActivity().getIntent().getStringExtra("itemType").equals(FragmentNode.LOST)) {
+                    notification.setStatus(FirebaseEndPoint.LOST);
+                } else {
+                    notification.setStatus(FirebaseEndPoint.FOUND);
+                }
+
+
+                DatabaseReference usernameRefMeeting = FirebaseDatabase.getInstance().getReference()
+                        .child(FirebaseEndPoint.NOTIFICATION).child(notifiedUserName).push();
+                usernameRefMeeting.setValue(notification);
+
+                final DatabaseReference notiCount = FirebaseDatabase.getInstance().getReference()
+                        .child(FirebaseEndPoint.USER_INFO).child(notifiedUserName);
+                final int[] c = {0};
+                notiCount.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        if (dataSnapshot.hasChild(FirebaseEndPoint.NOTI_COUNT)) {
+                            String count = dataSnapshot.child(FirebaseEndPoint.NOTI_COUNT).getValue().toString();
+                            if (c[0] == 0) {
+                                c[0] = 1;
+                                notiCount.child(FirebaseEndPoint.NOTI_COUNT).setValue(String.valueOf(Integer.parseInt(count) + 1));
+
+                            }
+
+                        } else {
+                            notiCount.child(FirebaseEndPoint.NOTI_COUNT).setValue("1");
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+
+      //  }
+
+
+    }
+
     private void getItemID(final String captionString) {
+
+        progressDialog.setMessage("Please Wait...");
+        progressDialog.show();
 
         final String[] mId = new String[1];
 
@@ -336,7 +436,7 @@ public class AddItemFragment extends Fragment {
         String proPic = SharePreferenceSingleton.getInstance(getActivity()).getString("propic");
 
         DatabaseReference usernameRefMeeting = FirebaseDatabase.getInstance().getReference()
-                .child("UserData").child(username).child(status).child("id"+itemId);
+                .child("UserData").child(username).child(status).child("id" + itemId);
         usernameRefMeeting.setValue(itemId);
 
         SimpleDateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm a");
@@ -350,7 +450,7 @@ public class AddItemFragment extends Fragment {
 
         FirebaseDatabase countData = FirebaseDatabase.getInstance();
         DatabaseReference countDataRefMeeting = countData.getReference(FirebaseEndPoint.LOST_ID_GENERATE).child("Count");
-        itemId = String.valueOf(Integer.valueOf(itemId)+1);
+        itemId = String.valueOf(Integer.valueOf(itemId) + 1);
         countDataRefMeeting.setValue(itemId);
 
         progressDialog.dismiss();

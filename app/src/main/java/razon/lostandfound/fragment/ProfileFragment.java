@@ -213,6 +213,24 @@ public class ProfileFragment extends Fragment {
     }
 
 
+    @Override
+    public void onPause() {
+
+        if (valueEventListener!=null && reference!=null){
+            reference.removeEventListener(valueEventListener);
+        }
+
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        if (valueEventListener!=null && reference!=null){
+            reference.removeEventListener(valueEventListener);
+        }
+        super.onStop();
+    }
+
     private void populateData() {
 
         String username1 = SharePreferenceSingleton.getInstance(getActivity()).getString("username");

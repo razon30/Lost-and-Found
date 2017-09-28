@@ -3,6 +3,8 @@ package razon.lostandfound.activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.util.ArrayList;
+
 import razon.lostandfound.R;
 import razon.lostandfound.fragment.AddItemFragment;
 import razon.lostandfound.fragment.ChatDetailsFragment;
@@ -13,12 +15,13 @@ import razon.lostandfound.utils.FragmentNode;
 public class MainActivity extends AppCompatActivity {
 
     String type;
+    public static ArrayList<String> userNameList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        userNameList = new ArrayList<String>();
 
         type = getIntent().getStringExtra("type");
 

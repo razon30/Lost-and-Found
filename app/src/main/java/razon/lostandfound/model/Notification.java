@@ -6,23 +6,29 @@ package razon.lostandfound.model;
 
 public class Notification {
 
+    public Notification(){};
+
     String itemID;
     String status;
-    String noti;
+    String postedBy;
+    String postDate;
+    String commentedBy;
 
 
-    public Notification(String itemID, String status, String noti) {
+    public Notification(String commentedBy, String itemID, String status, String postedBy,String postDate) {
+        this.commentedBy = commentedBy;
         this.itemID = itemID;
+        this.postedBy = postedBy;
         this.status = status;
-        this.noti = noti;
+        this.postDate = postDate;
     }
 
-    public String getItemID() {
-        return itemID;
+    public String getCommentedBy() {
+        return commentedBy;
     }
 
-    public void setItemID(String itemID) {
-        this.itemID = itemID;
+    public void setCommentedBy(String commentedBy) {
+        this.commentedBy = commentedBy;
     }
 
     public String getStatus() {
@@ -33,11 +39,29 @@ public class Notification {
         this.status = status;
     }
 
-    public String getNoti() {
-        return noti;
+    public String getItemID() {
+        return itemID;
     }
 
-    public void setNoti(String noti) {
-        this.noti = noti;
+    public void setItemID(String itemID) {
+        this.itemID = itemID;
     }
+
+    public String getPostedBy() {
+        return postedBy;
+    }
+
+    public void setPostedBy(String postedBy) {
+        this.postedBy = postedBy;
+    }
+
+    public String getPostDate() {
+        return postDate;
+    }
+
+    public void setPostDate(String postDate) {
+        this.postDate = postDate;
+    }
+
+
 }

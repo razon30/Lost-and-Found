@@ -200,10 +200,13 @@ public class HomeActivity extends AppCompatActivity {
 
         viewPager.setAdapter(new TabPagerAdapter(getSupportFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
+
         TabLayout.Tab homeTab = tabLayout.getTabAt(0);
         homeTab.setIcon(R.drawable.lost_icon);
+
         TabLayout.Tab foundTab = tabLayout.getTabAt(1);
         foundTab.setIcon(R.drawable.found_icon);
+
         TabLayout.Tab earningTab = tabLayout.getTabAt(2);
         if (bmp==null) {
             earningTab.setIcon(R.drawable.profile_icon);
@@ -211,8 +214,10 @@ public class HomeActivity extends AppCompatActivity {
             Drawable d = new BitmapDrawable(getResources(), bmp);
             earningTab.setIcon(d);
         }
+
         TabLayout.Tab ratingsTab = tabLayout.getTabAt(3);
         ratingsTab.setIcon(R.drawable.notification_icon);
+
         TabLayout.Tab accountTab = tabLayout.getTabAt(4);
         accountTab.setIcon(R.drawable.inbox_ixon);
 

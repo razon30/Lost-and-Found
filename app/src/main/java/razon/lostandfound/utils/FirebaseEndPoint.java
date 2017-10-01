@@ -20,4 +20,10 @@ public class FirebaseEndPoint {
     public static final String LOST_ID_GENERATE = "lostID";
     public static final String NOTI_ID_GENERATE = "notiID";
 
+
+    public static final String CHAT = "chat";
+    public static final String OPPOSIT_LIST = "oppositlist";
+    public static final String MSG_ID_GENERATE = "msgIdGenerate";
+
+
 }

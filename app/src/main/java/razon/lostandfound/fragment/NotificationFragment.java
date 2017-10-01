@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,7 +47,7 @@ public class NotificationFragment extends Fragment {
     DatabaseReference reference;
 
     ProgressDialog progressDialog;
-
+    LinearLayout no_item;
 
 
     @Override
@@ -78,12 +79,21 @@ public class NotificationFragment extends Fragment {
 
                 }
 
-                FirebaseDatabase.getInstance().getReference()
-                        .child(FirebaseEndPoint.USER_INFO)
-                        .child(username)
-                        .child(FirebaseEndPoint.NOTI_COUNT)
-                        .setValue("0");
-                Collections.reverse(arrayList);
+                if (arrayList.size() == 0) {
+                    noti_recycler.setVisibility(View.GONE);
+                    no_item.setVisibility(View.VISIBLE);
+                } else {
+                    FirebaseDatabase.getInstance().getReference()
+                            .child(FirebaseEndPoint.USER_INFO)
+                            .child(username)
+                            .child(FirebaseEndPoint.NOTI_COUNT)
+                            .setValue("0");
+                    Collections.reverse(arrayList);
+                    noti_recycler.setVisibility(View.VISIBLE);
+                    no_item.setVisibility(View.GONE);
+                }
+
+
                 adapter.notifyDataSetChanged();
                 progressDialog.dismiss();
 
@@ -120,6 +130,7 @@ public class NotificationFragment extends Fragment {
 
     private void initView(View view) {
 
+        no_item = (LinearLayout) view.findViewById(R.id.no_item);
         noti_recycler = (RecyclerView) view.findViewById(R.id.noti_recycler);
         arrayList = new ArrayList<>();
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);

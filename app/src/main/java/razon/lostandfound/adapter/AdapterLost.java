@@ -113,8 +113,8 @@ public class AdapterLost extends RecyclerView.Adapter<AdapterLost.MyViewHolder> 
             public void onClick(View view) {
                 Intent intent = new Intent(context, MainActivity.class)
                         .putExtra("type", FragmentNode.CHAT)
-                        .putExtra("receiver", currentItem.getUsername())
-                        .putExtra("receiverImage", currentItem.getProPic());
+                        .putExtra("receiver", currentItem.getUsername());
+                      //  .putExtra("receiverImage", currentItem.getProPic());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);

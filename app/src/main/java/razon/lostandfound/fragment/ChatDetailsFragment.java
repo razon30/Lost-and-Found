@@ -38,6 +38,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Stack;
 
 import razon.lostandfound.R;
 import razon.lostandfound.adapter.MessageListAdapter;
@@ -68,7 +69,7 @@ public class ChatDetailsFragment extends Fragment implements View.OnClickListene
 
     String receiver;
     String username;
-    String receiverImage;
+  //  String receiverImage;
 
     ValueEventListener valueEventListener;
     DatabaseReference reference;
@@ -84,7 +85,7 @@ public class ChatDetailsFragment extends Fragment implements View.OnClickListene
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat_details, container, false);
         receiver = getActivity().getIntent().getStringExtra("receiver");
-        receiverImage = getActivity().getIntent().getStringExtra("receiverImage");
+       // receiverImage = getActivity().getIntent().getStringExtra("receiverImage");
         username = SharePreferenceSingleton.getInstance(getActivity()).getString("username");
         initView(view);
 
@@ -210,12 +211,15 @@ public class ChatDetailsFragment extends Fragment implements View.OnClickListene
                                 .child(id)
                                 .setValue(finalMessage);
 
-                        id = String.valueOf(Integer.parseInt(id) + 1);
+//                        id = String.valueOf(Integer.parseInt(id) + 1);
+//
+//                        FirebaseDatabase.getInstance().getReference()
+//                                .child(FirebaseEndPoint.MSG_ID_GENERATE)
+//                                .child("Count")
+//                                .setValue(id);
 
-                        FirebaseDatabase.getInstance().getReference()
-                                .child(FirebaseEndPoint.MSG_ID_GENERATE)
-                                .child("Count")
-                                .setValue(id);
+
+
                     }else {
 
                         FirebaseDatabase.getInstance().getReference()
@@ -224,14 +228,31 @@ public class ChatDetailsFragment extends Fragment implements View.OnClickListene
                                 .child(id)
                                 .setValue(finalMessage);
 
-                        id = String.valueOf(Integer.parseInt(id) + 1);
 
-                        FirebaseDatabase.getInstance().getReference()
-                                .child(FirebaseEndPoint.MSG_ID_GENERATE)
-                                .child("Count")
-                                .setValue(id);
 
                     }
+
+                    id = String.valueOf(Integer.parseInt(id) + 1);
+
+                    FirebaseDatabase.getInstance().getReference()
+                            .child(FirebaseEndPoint.MSG_ID_GENERATE)
+                            .child("Count")
+                            .setValue(id);
+
+//                    FirebaseDatabase.getInstance().getReference()
+//                            .child(FirebaseEndPoint.MSG_ID_GENERATE)
+//                            .child("Count")
+//                            .setValue(id);
+
+//                    FirebaseDatabase.getInstance().getReference()
+//                            .child(FirebaseEndPoint.USER_INFO)
+//                            .child(username)
+//                            .child(FirebaseEndPoint.OPPOSIT_LIST)
+//                            .push()
+//                            .setValue(receiver);
+
+                    worksOnOpposit(username, receiver);
+                    worksOnOpposit(receiver, username);
 
 
                     edittextChatbox.setText("");
@@ -287,6 +308,109 @@ public class ChatDetailsFragment extends Fragment implements View.OnClickListene
         };
 
         reference.addValueEventListener(valueEventListener);
+
+    }
+
+    private void worksOnOpposit(final String username, final String receiver) {
+
+       final int[] c = {0};
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseEndPoint.USER_INFO)
+                .child(username)
+                .child(FirebaseEndPoint.OPPOSIT_LIST);
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (c[0]==0) {
+
+                    Stack<String> oppositList = new Stack<>();
+
+                    for (DataSnapshot datasnap : dataSnapshot.getChildren()) {
+
+                        oppositList.push(datasnap.getValue().toString());
+
+                    }
+
+                    if (oppositList.contains(receiver)) {
+                        oppositList.remove(receiver);
+                    }
+
+                    oppositList.push(receiver);
+
+                    FirebaseDatabase.getInstance().getReference()
+                            .child(FirebaseEndPoint.USER_INFO)
+                            .child(username)
+                            .child(FirebaseEndPoint.OPPOSIT_LIST)
+                            .setValue(oppositList);
+
+                    c[0] = 1;
+
+                    worksOnOpposit1(receiver, username);
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+    }
+    private void worksOnOpposit1(final String username, final String receiver) {
+
+        final int[] c = {0};
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseEndPoint.USER_INFO)
+                .child(username)
+                .child(FirebaseEndPoint.OPPOSIT_LIST);
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (c[0]==0) {
+
+                    Stack<String> oppositList = new Stack<>();
+
+                    for (DataSnapshot datasnap : dataSnapshot.getChildren()) {
+
+                        oppositList.push(datasnap.getValue().toString());
+
+                    }
+
+                    if (oppositList.contains(receiver)) {
+                        oppositList.remove(receiver);
+                    }
+
+                    oppositList.push(receiver);
+
+                    FirebaseDatabase.getInstance().getReference()
+                            .child(FirebaseEndPoint.USER_INFO)
+                            .child(username)
+                            .child(FirebaseEndPoint.OPPOSIT_LIST)
+                            .setValue(oppositList);
+
+                    c[0] = 1;
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
 
     }
 

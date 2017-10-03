@@ -30,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,12 +39,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 
+import id.zelory.compressor.Compressor;
 import razon.lostandfound.R;
 import razon.lostandfound.activity.HomeActivity;
 import razon.lostandfound.activity.MainActivity;
 import razon.lostandfound.model.Comments;
 import razon.lostandfound.model.FoundLostItem;
 import razon.lostandfound.model.Notification;
+import razon.lostandfound.utils.FileUtil;
 import razon.lostandfound.utils.FirebaseEndPoint;
 import razon.lostandfound.utils.FragmentNode;
 import razon.lostandfound.utils.MyEditText;
@@ -63,11 +66,14 @@ public class AddItemFragment extends Fragment {
     private CardView cancel;
     private static final int RESULT_CANCELED = 0;
     private int GALLERY = 1, CAMERA = 2;
+    int choise;
 
     String imageByte = "1";
     Bitmap thumbnail;
 
     ProgressDialog progressDialog;
+
+    File actualImage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -153,6 +159,12 @@ public class AddItemFragment extends Fragment {
             if (data != null) {
                 Uri contentURI = data.getData();
 
+                try {
+                    actualImage = FileUtil.from(getActivity(), data.getData());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 ProgressDialog progressDialog = new ProgressDialog(getActivity());
                 progressDialog.setMessage("Preparing image..");
                 progressDialog.show();
@@ -163,20 +175,37 @@ public class AddItemFragment extends Fragment {
                 productImage.setImageBitmap(thumbnail);
 
                 imageByte = "2";
+                choise = GALLERY;
 
                 progressDialog.dismiss();
 
             }
 
         } else if (requestCode == CAMERA) {
-
             thumbnail = (Bitmap) data.getExtras().get("data");
+            try {
+                actualImage = FileUtil.from(getActivity(),getUri(thumbnail));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
             productImage.setVisibility(View.VISIBLE);
             productImage.setImageBitmap(thumbnail);
 
             imageByte = "2";
+            choise = CAMERA;
 
         }
+    }
+
+    private Uri getUri(Bitmap thumbnail) {
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), thumbnail, "Title", null);
+        return Uri.parse(path);
+
     }
 
     public static Bitmap decodeUriToBitmap(Context mContext, Uri sendUri) {
@@ -223,9 +252,25 @@ public class AddItemFragment extends Fragment {
         if (imageByte.equals("2")) {
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, 20, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream.toByteArray();
-            imageByte = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            try {
+                Bitmap compressedImageBitmap  = new Compressor(getActivity())
+                        .setMaxWidth(400)
+                        .setMaxHeight(250)
+                        .setQuality(100)
+                        .setCompressFormat(Bitmap.CompressFormat.WEBP)
+                        .compressToBitmap(actualImage);
+                if (choise == CAMERA){
+                    compressedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
+                }else {
+                    compressedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 30, byteArrayOutputStream);
+                }
+
+                byte[] byteArray = byteArrayOutputStream.toByteArray();
+                imageByte = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
 
         }
 

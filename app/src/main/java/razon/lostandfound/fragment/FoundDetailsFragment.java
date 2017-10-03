@@ -186,7 +186,7 @@ public class FoundDetailsFragment extends Fragment {
                         productImage.setImageBitmap(bmp);
                         productImage.setVisibility(View.VISIBLE);
 
-                        showImage(bmp);
+                     //   showImage(bmp);
 
                         productImage.setOnClickListener(new View.OnClickListener() {
                             @Override

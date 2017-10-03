@@ -16,6 +16,7 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -281,13 +282,19 @@ public class ProfileFragment extends Fragment {
 
     private void setValue() {
 
-        name.setText(HomeActivity.userGeneralInfo.getName());
-        username.setText(HomeActivity.userGeneralInfo.getUsername());
-        catagory.setText(HomeActivity.userGeneralInfo.getCatagory());
-        email.setText(HomeActivity.userGeneralInfo.getEmail());
-        nsuId.setText(HomeActivity.userGeneralInfo.getNsuId());
-        phone.setText(HomeActivity.userGeneralInfo.getPhone());
-        designation.setText(HomeActivity.userGeneralInfo.getDesignation());
+        if (HomeActivity.userGeneralInfo != null) {
+            name.setText(HomeActivity.userGeneralInfo.getName());
+            username.setText(HomeActivity.userGeneralInfo.getUsername());
+            catagory.setText(HomeActivity.userGeneralInfo.getCatagory());
+            email.setText(HomeActivity.userGeneralInfo.getEmail());
+            nsuId.setText(HomeActivity.userGeneralInfo.getNsuId());
+            phone.setText(HomeActivity.userGeneralInfo.getPhone());
+            designation.setText(HomeActivity.userGeneralInfo.getDesignation());
+        }else {
+
+            Toast.makeText(getActivity(),"Some data is missing, Please reload",Toast.LENGTH_LONG).show();
+
+        }
 
     }
 

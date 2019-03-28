@@ -1,15 +1,21 @@
 package razon.lostandfound.fragment;
 
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -51,6 +57,7 @@ import razon.lostandfound.utils.SharePreferenceSingleton;
  */
 public class ChatDetailsFragment extends Fragment implements View.OnClickListener {
 
+    private static final int PERMISSION_CODE = 1;
     private RecyclerView mMessageRecycler;
     private MessageListAdapter mMessageAdapter;
     ArrayList<Message> messageList;
@@ -576,8 +583,57 @@ public class ChatDetailsFragment extends Fragment implements View.OnClickListene
     }
 
     private void takePhotoFromCamera() {
-        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            if (
+                    ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                            ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                            ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+            )
+            {
+                requestPermissions(new String[]{Manifest.permission.CAMERA,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_CODE);
+            } else {
+                openCamera();
+            }
+
+        } else {
+            openCamera();
+        }
+
+
+    }
+
+    private void openCamera() {
+        //  Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        //  startActivityForResult(intent, CAMERA);
+
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, CAMERA);
+        }
+
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+
+        switch (requestCode) {
+            case PERMISSION_CODE:{
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openCamera();
+                } else {
+                    Toast.makeText(getContext(), "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 

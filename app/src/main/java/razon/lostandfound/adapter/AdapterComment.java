@@ -88,8 +88,8 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.MyViewHo
     private void showImage(Bitmap data) {
 
         View view = context.getLayoutInflater().inflate(R.layout.image_view_layout, null);
-        ImageView imageView = (ImageView) view.findViewById(R.id.image);
-        ImageView cancel = (ImageView) view.findViewById(R.id.cancel);
+        ImageView imageView = view.findViewById(R.id.image);
+        ImageView cancel = view.findViewById(R.id.cancel);
         imageView.setMinimumHeight(context.getWindowManager().getDefaultDisplay().getHeight());
         imageView.setMinimumWidth(context.getWindowManager().getDefaultDisplay().getWidth());
         imageView.setImageBitmap(data);
@@ -126,12 +126,12 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.MyViewHo
 
         public MyViewHolder(View rootView) {
             super(rootView);
-            this.profileImage = (CircleImageView) rootView.findViewById(R.id.profile_image);
-            this.name = (MyTextView) rootView.findViewById(R.id.name);
-            this.username = (MyTextView) rootView.findViewById(R.id.username);
-            this.caption = (MyTextView) rootView.findViewById(R.id.caption);
-            this.date = (MyTextView) rootView.findViewById(R.id.date);
-            this.productImage = (ImageView) rootView.findViewById(R.id.product_image);
+            this.profileImage = rootView.findViewById(R.id.profile_image);
+            this.name = rootView.findViewById(R.id.name);
+            this.username = rootView.findViewById(R.id.username);
+            this.caption = rootView.findViewById(R.id.caption);
+            this.date = rootView.findViewById(R.id.date);
+            this.productImage = rootView.findViewById(R.id.product_image);
 
         }
     }

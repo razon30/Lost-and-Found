@@ -59,11 +59,12 @@
                             android:drawablePadding="10dp"
                             android:hint="Name"
                             android:textColor="#FFFFFF"
-                           />
+                            />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColorHint="#FFFFFF">
@@ -82,7 +83,6 @@
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
-                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColorHint="#FFFFFF"
@@ -102,6 +102,7 @@
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColorHint="#FFFFFF"
@@ -127,13 +128,33 @@
                         android:layout_marginTop="4dp">
 
                         <EditText
+                            android:id="@+id/esixting_pass"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_lock"
+                            android:drawablePadding="10dp"
+                            android:hint="Current Password"
                             android:inputType="textPassword"
+                            android:textColor="#FFFFFF"
+                            android:textColorHint="#FFFFFF" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="#FFFFFF"
+                        android:layout_marginTop="4dp">
+
+                        <EditText
                             android:id="@+id/pass"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:drawableLeft="@drawable/ic_lock"
                             android:drawablePadding="10dp"
-                            android:hint="Password"
+                            android:hint="New Password"
+                            android:inputType="textPassword"
                             android:textColor="#FFFFFF"
                             android:textColorHint="#FFFFFF" />
 
@@ -197,18 +218,18 @@
                     </android.support.design.widget.TextInputLayout>
 
 
-                        <Spinner
-                            android:id="@+id/catagory_spinner"
-                            android:layout_marginTop="4dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="30dp"
-                            android:gravity="center_vertical"
-                            android:textSize="18sp"
-                            android:layout_marginLeft="5dp"
-                            android:drawablePadding="10dp"
-                            android:enabled="false"
-                            android:textColor="#FFFFFF"
-                            android:textColorHint="#FFFFFF" />
+                    <Spinner
+                        android:id="@+id/catagory_spinner"
+                        android:layout_marginTop="4dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:gravity="center_vertical"
+                        android:textSize="18sp"
+                        android:layout_marginLeft="5dp"
+                        android:drawablePadding="10dp"
+                        android:enabled="false"
+                        android:textColor="#FFFFFF"
+                        android:textColorHint="#FFFFFF" />
 
 
 
@@ -226,7 +247,7 @@
                             app:cardElevation="8dp">
 
                             <TextView
-                                android:id="@+id/sign_up"
+                                android:id="@+id/update"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="#c13a3a"
@@ -234,7 +255,7 @@
                                 android:paddingLeft="30dp"
                                 android:paddingRight="30dp"
                                 android:paddingTop="8dp"
-                                android:text="Sign Up"
+                                android:text="Update"
                                 android:textColor="#FFFFFF"
                                 android:textSize="18sp" />
 
@@ -243,10 +264,10 @@
                         <View
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"></View>
+                            android:layout_weight="1" />
 
                         <TextView
-                            android:id="@+id/log_in"
+                            android:id="@+id/cancel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="25dp"
@@ -254,7 +275,7 @@
                             android:paddingLeft="30dp"
                             android:paddingRight="30dp"
                             android:paddingTop="8dp"
-                            android:text="Log In"
+                            android:text="Cancel"
                             android:textColor="#FFFFFF"
                             android:textSize="18sp" />
 

@@ -11,5 +11,7 @@ public class FragmentNode {
     public final static String CHAT = "chatFragment";
 
     public static final String ADD_ITEM = "newLostFound";
+    public static final String PROFILE = "profileOfList";
+    public static final String EDIT_PROFILE = "profileEdit";
 }
 

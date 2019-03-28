@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import razon.lostandfound.R;
 import razon.lostandfound.model.UserGeneralInfo;
 import razon.lostandfound.activity.HomeActivity;
+import razon.lostandfound.utils.EncryptDecrypt;
 import razon.lostandfound.utils.SharePreferenceSingleton;
 
 /**
@@ -42,7 +43,7 @@ public class SignUpFragment extends Fragment {
     String[] catagory = {"Select One", "Student", "Faculty", "Stuffs"};
     private EditText name;
     private EditText username;
-    private EditText nsuId;
+  //  private EditText nsuId;
     private EditText email;
     private EditText pass;
     private EditText passAgain;
@@ -110,7 +111,7 @@ public class SignUpFragment extends Fragment {
         logIn = (TextView) view.findViewById(R.id.log_in);
         name = (EditText) view.findViewById(R.id.name);
         username = (EditText) view.findViewById(R.id.username);
-        nsuId = (EditText) view.findViewById(R.id.nsu_id);
+     //   nsuId = (EditText) view.findViewById(R.id.nsu_id);
         email = (EditText) view.findViewById(R.id.email);
         pass = (EditText) view.findViewById(R.id.pass);
         passAgain = (EditText) view.findViewById(R.id.pass_again);
@@ -141,16 +142,16 @@ public class SignUpFragment extends Fragment {
             return;
         }
 
-        String id = nsuId.getText().toString().trim();
-        if (TextUtils.isEmpty(id)) {
-            nsuId.setError("NSU ID is Required");
-            Toast.makeText(getContext(), "NSU ID is Required", Toast.LENGTH_SHORT).show();
-            return;
-        }else if (id.length()<10){
-            nsuId.setError("NSU ID must be more than 9 digit");
-            Toast.makeText(getContext(), "NSU ID must be more than 9 digit", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        String id = ""; //nsuId.getText().toString().trim();
+//        if (TextUtils.isEmpty(id)) {
+//            nsuId.setError("NSU ID is Required");
+//            Toast.makeText(getContext(), "NSU ID is Required", Toast.LENGTH_SHORT).show();
+//            return;
+//        }else if (id.length()<10){
+//            nsuId.setError("NSU ID must be more than 9 digit");
+//            Toast.makeText(getContext(), "NSU ID must be more than 9 digit", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
         String emailString = email.getText().toString().trim();
         if (TextUtils.isEmpty(emailString)) {
@@ -161,26 +162,33 @@ public class SignUpFragment extends Fragment {
             email.setError("Enter a valid mail");
             Toast.makeText(getContext(), "Enter a valid mail", Toast.LENGTH_SHORT).show();
             return;
-        }else if (!emailString.split("@")[1].equals("northsouth.edu")){
-
-            email.setError("Invalid email address");
-            Toast.makeText(getContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
-            return;
-
         }
+//        else if (!emailString.split("@")[1].equals("northsouth.edu")){
+//
+//            email.setError("Invalid email address");
+//            Toast.makeText(getContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
+//            return;
+//
+//        }
 
-        final String passString = pass.getText().toString().trim();
+        String passString = pass.getText().toString().trim();
         if (TextUtils.isEmpty(passString)) {
             pass.setError("Password is Required");
             Toast.makeText(getContext(), "Password is Required", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        String encryptPass;
+
         String again = passAgain.getText().toString().trim();
         if (!passString.equals(again)) {
             passAgain.setError("Password Do not match");
             Toast.makeText(getContext(), "Password Do not match", Toast.LENGTH_SHORT).show();
             return;
+        }else {
+            String key = "Bar12345Bar12345"; // 128 bit key
+            String initVector = "RandomInitVector"; // 16 bytes IV
+            encryptPass = EncryptDecrypt.encrypt(key, initVector, passString);
         }
 
         String designationString = designation.getText().toString().trim();
@@ -204,7 +212,7 @@ public class SignUpFragment extends Fragment {
 
 
         final UserGeneralInfo userDetailsData = new UserGeneralInfo(nameString, usernameString, id,
-                emailString, passString, designationString, phoneString, catagorySelected);
+                emailString, encryptPass, designationString, phoneString, catagorySelected);
 
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -220,7 +228,6 @@ public class SignUpFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
 
                             SharePreferenceSingleton.getInstance(getActivity()).saveString("user","1");
                             SharePreferenceSingleton.getInstance(getActivity()).saveString("username",usernameString);

@@ -15,7 +15,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (SharePreferenceSingleton.getInstance(this).getString("user").equals("1")){
-            SimpleActivityTransition.goToNextActivity(this, HomeActivity.class);
+            if (SharePreferenceSingleton.getInstance(this).getString("username").equals("admin12")){
+                SimpleActivityTransition.goToNextActivity(this, AdminActivity.class);
+            }else {
+                SimpleActivityTransition.goToNextActivity(this, HomeActivity.class);
+            }
             finish();
         }else {
 

@@ -16,6 +16,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import razon.lostandfound.R;
 import razon.lostandfound.activity.MainActivity;
 import razon.lostandfound.model.Inbox;
+import razon.lostandfound.model.UserList;
 import razon.lostandfound.utils.FragmentNode;
 import razon.lostandfound.utils.MyTextView;
 import razon.lostandfound.utils.SharePreferenceSingleton;
@@ -24,15 +25,15 @@ import razon.lostandfound.utils.SharePreferenceSingleton;
  * Created by HP on 18-Aug-17.
  */
 
-public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.MyViewHolder> {
+public class AdapterUserList extends RecyclerView.Adapter<AdapterUserList.MyViewHolder> {
 
 
     LayoutInflater inflater;
     Activity context;
-    ArrayList<Inbox> lostList = new ArrayList<>();
+    ArrayList<UserList> lostList = new ArrayList<>();
     String username;
 
-    public AdapterInbox(Activity context, ArrayList<Inbox> lostList) {
+    public AdapterUserList(Activity context, ArrayList<UserList> lostList) {
         this.context = context;
         this.lostList = lostList;
         inflater = LayoutInflater.from(context);
@@ -46,7 +47,7 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.MyViewHolder
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        final Inbox currentNotification = lostList.get(position);
+        final UserList currentNotification = lostList.get(position);
 
         if (!currentNotification.getImage().equals("1")) {
             byte[] data = Base64.decode(currentNotification.getImage(), Base64.DEFAULT);
@@ -54,12 +55,9 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.MyViewHolder
             holder.profileImage.setImageBitmap(bmp);
         }
 
-        holder.name.setText(currentNotification.getName());
-        if (currentNotification.getDesignation().equals("0")){
-            holder.designation.setVisibility(View.GONE);
-        }else {
-            holder.designation.setText(currentNotification.getDesignation());
-        }
+        holder.name.setText(currentNotification.getUserGeneralInfo().getName());
+        holder.designation.setText(currentNotification.getUserGeneralInfo().getDesignation());
+
         holder.rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,12 +66,12 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.MyViewHolder
                 if (username.equals("admin12")) {
                     intent = new Intent(context, MainActivity.class)
                             .putExtra("type", FragmentNode.PROFILE)
-                            .putExtra("receiver", currentNotification.getUsername());
+                            .putExtra("receiver", currentNotification.getUserGeneralInfo().getUsername())
+                            .putExtra("pass", currentNotification.getUserGeneralInfo().getPass());
                 } else {
                     intent = new Intent(context, MainActivity.class)
                             .putExtra("type", FragmentNode.CHAT)
-                            .putExtra("receiver", currentNotification.getUsername())
-                            .putExtra("exist", currentNotification.getDesignation());
+                            .putExtra("receiver", currentNotification.getUserGeneralInfo().getUsername());
                 }
                 //  .putExtra("receiverImage", currentItem.getProPic());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

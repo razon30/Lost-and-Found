@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import razon.lostandfound.R;
+import razon.lostandfound.activity.HomeActivity;
 import razon.lostandfound.adapter.AdapterInbox;
 import razon.lostandfound.model.Inbox;
 import razon.lostandfound.utils.FirebaseEndPoint;
@@ -60,7 +61,6 @@ public class InboxFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_inbox, container, false);
         initView(view);
-
         return view;
     }
 
@@ -147,26 +147,41 @@ public class InboxFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 if (getdata[0] == 0) {
-                    String name = dataSnapshot.child(FirebaseEndPoint.USER_GENERAL_INFO).child("name").getValue().toString();
-                    String designation = dataSnapshot.child(FirebaseEndPoint.USER_GENERAL_INFO).child("designation").getValue().toString();
-                    String image = "1";
-                    if (dataSnapshot.hasChild("image")) {
-                        image = dataSnapshot.child("image").getValue().toString();
-                    }
 
-                    Log.d("opposit", name);
-                    Inbox inbox = new Inbox(name, receiver1,designation, image);
-                    set.add(inbox);
-                    getdata[0] = 1;
-                    if (set.size()>0){
-                        inboxList.clear();
-                        inboxList.addAll(set);
-                        Collections.reverse(inboxList);
-                        adapter.notifyDataSetChanged();
-                    }
+                    if (dataSnapshot.getValue() != null) {
 
+                        String name = dataSnapshot.child(FirebaseEndPoint.USER_GENERAL_INFO).child("name").getValue().toString();
+                        String designation = dataSnapshot.child(FirebaseEndPoint.USER_GENERAL_INFO).child("designation").getValue().toString();
+                        String image = "1";
+                        if (dataSnapshot.hasChild("image")) {
+                            image = dataSnapshot.child("image").getValue().toString();
+                        }
+
+                        Log.d("opposit", name);
+                        Inbox inbox = new Inbox(name, receiver1, designation, image);
+                        set.add(inbox);
+                        getdata[0] = 1;
+                        if (set.size() > 0) {
+                            inboxList.clear();
+                            inboxList.addAll(set);
+                            Collections.reverse(inboxList);
+                            adapter.notifyDataSetChanged();
+                        }
+
+                    }else {
+
+                        Inbox inbox = new Inbox("The profile is deleted by an Admin", receiver1, "0", "1");
+                        set.add(inbox);
+                        getdata[0] = 1;
+                        if (set.size() > 0) {
+                            inboxList.clear();
+                            inboxList.addAll(set);
+                            Collections.reverse(inboxList);
+                            adapter.notifyDataSetChanged();
+                        }
+
+                    }
                 }
-
 
 
             }

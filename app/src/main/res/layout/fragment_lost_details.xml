@@ -22,23 +22,20 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-               >
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:padding="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="16dp">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/profile_image"
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:layout_marginRight="16dp"
-                        android:src="@drawable/profile_dummy"
-                        />
+                        android:src="@drawable/profile_dummy" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -77,11 +74,11 @@
                     android:orientation="vertical">
 
                     <razon.lostandfound.utils.MyTextView
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
                         android:id="@+id/caption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
                         android:textColor="#fff"
                         android:textSize="16sp" />
 
@@ -90,15 +87,62 @@
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
                         android:layout_marginTop="10dp"
-                        android:scaleType="fitXY"
-                       />
+                        android:scaleType="fitXY" />
 
                 </LinearLayout>
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
+
+        <LinearLayout
+            android:id="@+id/adminView"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <razon.lostandfound.utils.MyTextView
+                android:id="@+id/stopComment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:background="#0091EA"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:text="Turn off comment"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+
+            <razon.lostandfound.utils.MyTextView
+                android:id="@+id/delete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="1"
+                android:background="#F44336"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:text="Delete this"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+
+
+        </LinearLayout>
+
+
         <android.support.v7.widget.CardView
+            android:id="@+id/adminGone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -111,45 +155,43 @@
                 android:id="@+id/addPhoto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="5dp"
+                android:orientation="horizontal"
                 android:paddingBottom="5dp"
-                android:orientation="horizontal">
+                android:paddingTop="5dp">
 
                 <ImageView
-                    android:layout_marginLeft="15dp"
-                    android:layout_gravity="left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/chat"
-                    />
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="15dp"
+                    android:src="@drawable/chat" />
 
                 <razon.lostandfound.utils.MyTextView
                     android:id="@+id/commentNumber"
-                    android:layout_marginLeft="15dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No Comments"
-                    android:textSize="16sp"
-                    android:textColor="@color/colorPrimaryDark"
                     android:layout_gravity="center"
-                   />
+                    android:layout_marginLeft="15dp"
+                    android:text="No Comments"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="16sp" />
 
 
                 <razon.lostandfound.utils.MyTextView
-                    android:layout_marginLeft="55dp"
+                    android:id="@+id/addcomment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Add Comment"
                     android:layout_gravity="center|right"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
+                    android:layout_marginLeft="55dp"
+                    android:text="Add Comment"
                     android:textColor="#be1a0e"
-                   />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
 
             </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+        </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"

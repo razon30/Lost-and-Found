@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context="razon.lostandfound.activity.SearchActivity">
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/search_view"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:searchIcon="@drawable/ic_search1"
+        android:background="#FFF" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        class="android.support.v7.widget.RecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</LinearLayout>

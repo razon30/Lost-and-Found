@@ -10,6 +10,8 @@ import razon.lostandfound.fragment.AddItemFragment;
 import razon.lostandfound.fragment.ChatDetailsFragment;
 import razon.lostandfound.fragment.FoundDetailsFragment;
 import razon.lostandfound.fragment.LostDetailsFragment;
+import razon.lostandfound.fragment.ProfileFragment;
+import razon.lostandfound.fragment.UpdateProfileFragment;
 import razon.lostandfound.utils.FragmentNode;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,6 +40,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case FragmentNode.ADD_ITEM:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AddItemFragment()).commit();
+                break;
+            case FragmentNode.PROFILE:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
+                break;
+            case FragmentNode.EDIT_PROFILE:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new UpdateProfileFragment()).commit();
                 break;
 
         }

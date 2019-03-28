@@ -2,6 +2,7 @@ package razon.lostandfound.fragment;
 
 
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,11 +22,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import razon.lostandfound.activity.HomeActivity;
 import razon.lostandfound.adapter.AdapterLost;
 import razon.lostandfound.R;
 import razon.lostandfound.model.FoundLostItem;
 import razon.lostandfound.utils.FirebaseEndPoint;
 import razon.lostandfound.utils.FragmentNode;
+import razon.lostandfound.utils.MyApplication;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,6 +42,7 @@ public class FoundFragment extends Fragment {
     DatabaseReference databaseReference;
     ValueEventListener valueEventListener;
     ArrayList<FoundLostItem> lostList;
+
     LinearLayout no_item;
     ProgressDialog progressDialouge;
 
@@ -70,8 +74,6 @@ public class FoundFragment extends Fragment {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
 
                     lostList.add(postSnapshot.getValue(FoundLostItem.class));
-
-                    Log.d("size", postSnapshot.getValue()+"");
 
                 }
 
@@ -118,8 +120,8 @@ public class FoundFragment extends Fragment {
 
     private void initialization(View view) {
 
-        no_item = (LinearLayout) view.findViewById(R.id.no_item);
-        recyclerView = (RecyclerView) view.findViewById(R.id.lost_recycler);
+        no_item = view.findViewById(R.id.no_item);
+        recyclerView = view.findViewById(R.id.lost_recycler);
         lostList = new ArrayList<>();
         adapter = new AdapterLost(getActivity(), lostList, FragmentNode.FOUND);
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);

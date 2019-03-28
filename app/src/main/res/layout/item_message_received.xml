@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="8dp">
+    android:paddingTop="8dp"
+    android:paddingLeft="10dp">
 
     <ImageView
         android:visibility="gone"
@@ -21,11 +22,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:textColor="#ffffff"
+        android:paddingLeft="8dp"
+        android:textColor="#605d5d"
         app:layout_constraintLeft_toRightOf="@+id/image_message_profile"
-        android:layout_marginLeft="8dp"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="4dp" />
+        android:layout_marginTop="4dp"
+      />
 
     <RelativeLayout
         android:id="@+id/relative"
@@ -59,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="10sp"
-        android:textColor="#ffffff"
+        android:textColor="#605d5d"
         app:layout_constraintLeft_toRightOf="@+id/relative"
         android:layout_marginLeft="4dp"
         app:layout_constraintBottom_toBottomOf="@+id/relative" />

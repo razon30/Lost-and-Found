@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import razon.lostandfound.activity.AdminActivity;
 import razon.lostandfound.adapter.AdapterComment;
 import razon.lostandfound.R;
 import razon.lostandfound.activity.MainActivity;
@@ -36,6 +38,8 @@ import razon.lostandfound.model.FoundLostItem;
 import razon.lostandfound.utils.FirebaseEndPoint;
 import razon.lostandfound.utils.FragmentNode;
 import razon.lostandfound.utils.MyTextView;
+import razon.lostandfound.utils.SharePreferenceSingleton;
+import razon.lostandfound.utils.SimpleActivityTransition;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,6 +80,7 @@ public class FoundDetailsFragment extends Fragment {
     private LinearLayout addComment;
 
     View mainView;
+    MyTextView addcomment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -109,13 +114,53 @@ public class FoundDetailsFragment extends Fragment {
         return mainView;
     }
 
+    private void worksOnAdmin(final FoundLostItem currentItem) {
+
+        LinearLayout adminView = (LinearLayout) mainView.findViewById(R.id.adminView);
+        final CardView adminGone = (CardView) mainView.findViewById(R.id.adminGone);
+        MyTextView stopComment = (MyTextView) mainView.findViewById(R.id.stopComment);
+        MyTextView delete = (MyTextView) mainView.findViewById(R.id.delete);
+
+        String username = SharePreferenceSingleton.getInstance(getActivity()).getString("username");
+        if (username.equals("admin12")){
+            adminView.setVisibility(View.VISIBLE);
+            adminGone.setVisibility(View.GONE);
+        }
+
+        stopComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseDatabase.getInstance().getReference(FirebaseEndPoint.FOUND).child(id).child("enable").setValue("0");
+                adminGone.setVisibility(View.VISIBLE);
+                addComment.setEnabled(false);
+                addcomment.setText("Commenting turned off");
+            }
+        });
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseDatabase.getInstance().getReference(FirebaseEndPoint.FOUND).child(id).removeValue();
+                FirebaseDatabase.getInstance().getReference(FirebaseEndPoint.USER_INFO)
+                                                .child(currentItem.getUsername())
+                                                .child(FirebaseEndPoint.FOUND)
+                                                .child("id"+id).removeValue();
+                SimpleActivityTransition.goToPreviousActivity(getActivity(), AdminActivity.class);
+                getActivity().finish();
+            }
+        });
+
+
+    }
+
+
     private void populateComments() {
 
         commentDatabaseReference = FirebaseDatabase.getInstance().getReference(FirebaseEndPoint.COMMENT).child(id);
         commentValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                commentList.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                     commentList.add(postSnapshot.getValue(Comments.class));
@@ -153,10 +198,11 @@ public class FoundDetailsFragment extends Fragment {
     private void populateDetails() {
         productImage.setVisibility(View.GONE);
         databaseReference = FirebaseDatabase.getInstance().getReference(FirebaseEndPoint.FOUND).child(id);
+        final int[] f = {0};
         valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                if (f[0]==0) {
                 FoundLostItem curretnItem = dataSnapshot.getValue(FoundLostItem.class);
 
                 if (curretnItem != null) {
@@ -199,8 +245,20 @@ public class FoundDetailsFragment extends Fragment {
                         productImage.setVisibility(View.GONE);
                     }
 
-                }
+                    String enable = curretnItem.getEnable();
+                    if (enable.equals("")){
+                        addComment.setEnabled(false);
+                        addcomment.setText("Admin turned commenting off");
+                    }
 
+
+                    worksOnAdmin(curretnItem);
+
+
+                }
+                    f[0] = 1;
+
+                }
 
             }
 
@@ -246,6 +304,7 @@ public class FoundDetailsFragment extends Fragment {
         username = (MyTextView) view.findViewById(R.id.username);
         caption = (MyTextView) view.findViewById(R.id.caption);
         date = (MyTextView) view.findViewById(R.id.date);
+        addcomment = (MyTextView) view.findViewById(R.id.addcomment);
         commentNumber = (MyTextView) view.findViewById(R.id.commentNumber);
         productImage = (ImageView) view.findViewById(R.id.product_image);
         commentRecycler = (RecyclerView) view.findViewById(R.id.commentRecycler);

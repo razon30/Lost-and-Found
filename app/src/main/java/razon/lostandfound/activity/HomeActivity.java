@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -17,6 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,7 +38,9 @@ import razon.lostandfound.model.UserGeneralInfo;
 import razon.lostandfound.utils.Fab;
 import razon.lostandfound.utils.FirebaseEndPoint;
 import razon.lostandfound.utils.FragmentNode;
+import razon.lostandfound.utils.MyApplication;
 import razon.lostandfound.utils.SharePreferenceSingleton;
+import razon.lostandfound.utils.SimpleActivityTransition;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -50,6 +54,12 @@ public class HomeActivity extends AppCompatActivity {
 
     public static UserGeneralInfo userGeneralInfo;
     Bitmap bmp;
+    public static String page = "0";
+    public static Fab fab;
+    View sheetView;
+    View overlay;
+
+    TextView searchTxtbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +70,17 @@ public class HomeActivity extends AppCompatActivity {
         worksOnTabViewPager();
         worksOnFab();
 
+        searchTxtbox.setOnClickListener(v->
+
+                SimpleActivityTransition.goToNextActivity(HomeActivity.this, SearchActivity.class)
+        );
+
+
     }
 
     private void worksOnFab() {
 
-        Fab fab = (Fab) findViewById(R.id.fab);
-        View sheetView = findViewById(R.id.fab_sheet);
-        View overlay = findViewById(R.id.overlay);
+
         int sheetColor = Color.parseColor("#FFFFFF");
         int fabColor = getResources().getColor(R.color.colorPrimaryDark);
 
@@ -136,11 +150,20 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
 
     private void initialization() {
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
+
+        viewPager = findViewById(R.id.viewPager);
+        tabLayout = findViewById(R.id.tabLayout);
+        fab = findViewById(R.id.fab);
+        sheetView = findViewById(R.id.fab_sheet);
+        overlay = findViewById(R.id.overlay);
+        searchTxtbox = findViewById(R.id.searchTxtbox);
         String username = SharePreferenceSingleton.getInstance(this).getString("username");
 
         reference = FirebaseDatabase.getInstance().getReference().child("UserData").child(username);
@@ -200,6 +223,7 @@ public class HomeActivity extends AppCompatActivity {
 
         viewPager.setAdapter(new TabPagerAdapter(getSupportFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
+        viewPager.setOffscreenPageLimit(5);
 
         TabLayout.Tab homeTab = tabLayout.getTabAt(0);
         homeTab.setIcon(R.drawable.lost_icon);
@@ -232,6 +256,8 @@ public class HomeActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
+
+
             switch (position) {
                 case 0:
                     return new LostFragment();

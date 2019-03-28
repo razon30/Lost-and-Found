@@ -69,6 +69,7 @@ public class ChatDetailsFragment extends Fragment implements View.OnClickListene
 
     String receiver;
     String username;
+    String exist = "1";
   //  String receiverImage;
 
     ValueEventListener valueEventListener;
@@ -85,8 +86,12 @@ public class ChatDetailsFragment extends Fragment implements View.OnClickListene
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat_details, container, false);
         receiver = getActivity().getIntent().getStringExtra("receiver");
+
        // receiverImage = getActivity().getIntent().getStringExtra("receiverImage");
         username = SharePreferenceSingleton.getInstance(getActivity()).getString("username");
+
+
+
         initView(view);
 
 
@@ -122,12 +127,12 @@ public class ChatDetailsFragment extends Fragment implements View.OnClickListene
     }
 
     private void initView(View view) {
-        edittextChatbox = (EditText) view.findViewById(R.id.edittext_chatbox);
-        button_image_send = (ImageView) view.findViewById(R.id.button_image_send);
-        buttonChatboxSend = (Button) view.findViewById(R.id.button_chatbox_send);
-        layoutChatbox = (LinearLayout) view.findViewById(R.id.layout_chatbox);
+        edittextChatbox = view.findViewById(R.id.edittext_chatbox);
+        button_image_send = view.findViewById(R.id.button_image_send);
+        buttonChatboxSend = view.findViewById(R.id.button_chatbox_send);
+        layoutChatbox = view.findViewById(R.id.layout_chatbox);
         messageList = new ArrayList<>();
-        mMessageRecycler = (RecyclerView) view.findViewById(R.id.reyclerview_message_list);
+        mMessageRecycler = view.findViewById(R.id.reyclerview_message_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setStackFromEnd(true);
         mMessageRecycler.setLayoutManager(layoutManager);
@@ -152,6 +157,15 @@ public class ChatDetailsFragment extends Fragment implements View.OnClickListene
 
             }
         });
+
+        if (username.equals("admin12")){
+            exist = getActivity().getIntent().getStringExtra("exist");
+        }
+        if (exist.equals("0")){
+            button_image_send.setEnabled(false);
+        }else {
+            button_image_send.setEnabled(true);
+        }
         buttonChatboxSend.setOnClickListener(this);
         button_image_send.setOnClickListener(this);
     }
@@ -161,7 +175,11 @@ public class ChatDetailsFragment extends Fragment implements View.OnClickListene
         switch (v.getId()) {
             case R.id.button_chatbox_send:
                 body = edittextChatbox.getText().toString();
-                submit(body, "1");
+                if (exist.equals("0")){
+                    Toast.makeText(getActivity(), "The receiver was deleted by an admin",Toast.LENGTH_LONG).show();
+                }else {
+                    submit(body, "1");
+                }
                 break;
             case R.id.button_image_send:
                 showPictureDialog();
@@ -567,7 +585,7 @@ public class ChatDetailsFragment extends Fragment implements View.OnClickListene
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == this.RESULT_CANCELED) {
+        if (resultCode == RESULT_CANCELED) {
             return;
         }
         if (requestCode == GALLERY) {

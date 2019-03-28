@@ -1,16 +1,22 @@
 package razon.lostandfound.fragment;
 
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
@@ -58,6 +64,7 @@ import razon.lostandfound.utils.SimpleActivityTransition;
  */
 public class AddItemFragment extends Fragment {
 
+    static final int PERMISSION_CODE = 1;
     String status;
     private MyEditText caption;
     private ImageView productImage;
@@ -83,21 +90,9 @@ public class AddItemFragment extends Fragment {
         status = getActivity().getIntent().getStringExtra("status");
         initView(view);
 
-        addPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        addPhoto.setOnClickListener(view1 -> showPictureDialog());
 
-                showPictureDialog();
-
-            }
-        });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
+        cancel.setOnClickListener(view12 -> getActivity().onBackPressed());
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,16 +138,64 @@ public class AddItemFragment extends Fragment {
     }
 
     private void takePhotoFromCamera() {
-        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            if (
+                    ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                            ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                            ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+            )
+            {
+                requestPermissions(new String[]{Manifest.permission.CAMERA,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_CODE);
+            } else {
+                openCamera();
+            }
+
+        } else {
+            openCamera();
+        }
+
+
     }
 
+    private void openCamera() {
+      //  Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+      //  startActivityForResult(intent, CAMERA);
+
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, CAMERA);
+        }
+
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+
+        switch (requestCode) {
+            case PERMISSION_CODE:{
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openCamera();
+                } else {
+                    Toast.makeText(getContext(), "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == this.RESULT_CANCELED) {
+        if (resultCode == RESULT_CANCELED) {
             return;
         }
         if (requestCode == GALLERY) {
@@ -184,7 +227,7 @@ public class AddItemFragment extends Fragment {
         } else if (requestCode == CAMERA) {
             thumbnail = (Bitmap) data.getExtras().get("data");
             try {
-                actualImage = FileUtil.from(getActivity(),getUri(thumbnail));
+                actualImage = FileUtil.from(getActivity(), getUri(thumbnail));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -251,24 +294,32 @@ public class AddItemFragment extends Fragment {
 
         if (imageByte.equals("2")) {
 
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            try {
-                Bitmap compressedImageBitmap  = new Compressor(getActivity())
-                        .setMaxWidth(400)
-                        .setMaxHeight(250)
-                        .setQuality(100)
-                        .setCompressFormat(Bitmap.CompressFormat.WEBP)
-                        .compressToBitmap(actualImage);
-                if (choise == CAMERA){
-                    compressedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
-                }else {
-                    compressedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 30, byteArrayOutputStream);
-                }
+            if (actualImage.length() > 200000) {
 
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                try {
+                    Bitmap compressedImageBitmap = new Compressor(getActivity())
+                            .setMaxWidth(400)
+                            .setMaxHeight(250)
+                            .setQuality(100)
+                            .setCompressFormat(Bitmap.CompressFormat.WEBP)
+                            .compressToBitmap(actualImage);
+                    if (choise == CAMERA) {
+                        compressedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
+                    } else {
+                        compressedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 30, byteArrayOutputStream);
+                    }
+
+                    byte[] byteArray = byteArrayOutputStream.toByteArray();
+                    imageByte = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
                 byte[] byteArray = byteArrayOutputStream.toByteArray();
                 imageByte = Base64.encodeToString(byteArray, Base64.DEFAULT);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
 
 
@@ -359,11 +410,11 @@ public class AddItemFragment extends Fragment {
         userNameList.addAll(hashSet);
         if (comments.getUsername().equals(getActivity().getIntent().getStringExtra("postedBy"))) {
 
-            if (userNameList.contains(comments.getUsername())){
+            if (userNameList.contains(comments.getUsername())) {
                 userNameList.remove(userNameList.indexOf(comments.getUsername()));
             }
 
-        }else {
+        } else {
 
             userNameList.add(getActivity().getIntent().getStringExtra("postedBy"));
 
@@ -371,7 +422,7 @@ public class AddItemFragment extends Fragment {
 
         String username = SharePreferenceSingleton.getInstance(getActivity()).getString("username");
 
-        if (userNameList.contains(username)){
+        if (userNameList.contains(username)) {
             userNameList.remove(userNameList.indexOf(username));
         }
 
@@ -380,64 +431,64 @@ public class AddItemFragment extends Fragment {
 
         for (int i = 0; i < userNameList.size(); i++) {
 
-          //  if (!userNameList.get(i).equals(getActivity().getIntent().getStringExtra("postedBy"))) {
+            //  if (!userNameList.get(i).equals(getActivity().getIntent().getStringExtra("postedBy"))) {
 
-                String notifiedUserName = userNameList.get(i);
-                Notification notification = new Notification();
-                notification.setCommentedBy(comments.getUsername());
-                notification.setItemID(id);
-                if (getActivity().getIntent().getStringExtra("postedBy") == null) {
-                    notification.setPostedBy("Someone");
-                } else {
-                    notification.setPostedBy(getActivity().getIntent().getStringExtra("postedBy"));
-                }
-
-                if (getActivity().getIntent().getStringExtra("postTime") == null) {
-                    notification.setPostDate("Someday");
-                } else {
-                    notification.setPostDate(getActivity().getIntent().getStringExtra("postTime"));
-                }
-                if (getActivity().getIntent().getStringExtra("itemType").equals(FragmentNode.LOST)) {
-                    notification.setStatus(FirebaseEndPoint.LOST);
-                } else {
-                    notification.setStatus(FirebaseEndPoint.FOUND);
-                }
-
-
-                DatabaseReference usernameRefMeeting = FirebaseDatabase.getInstance().getReference()
-                        .child(FirebaseEndPoint.NOTIFICATION).child(notifiedUserName).push();
-                usernameRefMeeting.setValue(notification);
-
-                final DatabaseReference notiCount = FirebaseDatabase.getInstance().getReference()
-                        .child(FirebaseEndPoint.USER_INFO).child(notifiedUserName);
-                final int[] c = {0};
-                notiCount.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        if (dataSnapshot.hasChild(FirebaseEndPoint.NOTI_COUNT)) {
-                            String count = dataSnapshot.child(FirebaseEndPoint.NOTI_COUNT).getValue().toString();
-                            if (c[0] == 0) {
-                                c[0] = 1;
-                                notiCount.child(FirebaseEndPoint.NOTI_COUNT).setValue(String.valueOf(Integer.parseInt(count) + 1));
-
-                            }
-
-                        } else {
-                            notiCount.child(FirebaseEndPoint.NOTI_COUNT).setValue("1");
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
+            String notifiedUserName = userNameList.get(i);
+            Notification notification = new Notification();
+            notification.setCommentedBy(comments.getUsername());
+            notification.setItemID(id);
+            if (getActivity().getIntent().getStringExtra("postedBy") == null) {
+                notification.setPostedBy("Someone");
+            } else {
+                notification.setPostedBy(getActivity().getIntent().getStringExtra("postedBy"));
             }
 
-      //  }
+            if (getActivity().getIntent().getStringExtra("postTime") == null) {
+                notification.setPostDate("Someday");
+            } else {
+                notification.setPostDate(getActivity().getIntent().getStringExtra("postTime"));
+            }
+            if (getActivity().getIntent().getStringExtra("itemType").equals(FragmentNode.LOST)) {
+                notification.setStatus(FirebaseEndPoint.LOST);
+            } else {
+                notification.setStatus(FirebaseEndPoint.FOUND);
+            }
+
+
+            DatabaseReference usernameRefMeeting = FirebaseDatabase.getInstance().getReference()
+                    .child(FirebaseEndPoint.NOTIFICATION).child(notifiedUserName).push();
+            usernameRefMeeting.setValue(notification);
+
+            final DatabaseReference notiCount = FirebaseDatabase.getInstance().getReference()
+                    .child(FirebaseEndPoint.USER_INFO).child(notifiedUserName);
+            final int[] c = {0};
+            notiCount.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    if (dataSnapshot.hasChild(FirebaseEndPoint.NOTI_COUNT)) {
+                        String count = dataSnapshot.child(FirebaseEndPoint.NOTI_COUNT).getValue().toString();
+                        if (c[0] == 0) {
+                            c[0] = 1;
+                            notiCount.child(FirebaseEndPoint.NOTI_COUNT).setValue(String.valueOf(Integer.parseInt(count) + 1));
+
+                        }
+
+                    } else {
+                        notiCount.child(FirebaseEndPoint.NOTI_COUNT).setValue("1");
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
+        //  }
 
 
     }
@@ -488,7 +539,7 @@ public class AddItemFragment extends Fragment {
         Date date = new Date();
         String dateReadable = format.format(date);
 
-        FoundLostItem foundLostItem = new FoundLostItem(itemId, username, name, captionString, imageByte, dateReadable, proPic);
+        FoundLostItem foundLostItem = new FoundLostItem(itemId, username, name, captionString, imageByte, dateReadable, proPic, "1");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference emailRefCount = database.getReference().child(status).child(itemId);
         emailRefCount.setValue(foundLostItem);

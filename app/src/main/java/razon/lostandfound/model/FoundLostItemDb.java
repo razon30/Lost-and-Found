@@ -1,14 +1,12 @@
 package razon.lostandfound.model;
 
-import android.support.annotation.NonNull;
-
 /**
  * Created by HP on 18-Sep-17.
  */
 
-public class FoundLostItem {
+public class FoundLostItemDb {
 
-    public FoundLostItem(){};
+    public FoundLostItemDb(){};
 
     String id;
 
@@ -22,8 +20,10 @@ public class FoundLostItem {
     String proPic;
     String enable;
 
-    public FoundLostItem(String id, String username, String name, String caption,
-                         String image, String time, String proPic, String enable) {
+    String type;
+
+    public FoundLostItemDb(String id, String username, String name, String caption,
+                           String image, String time, String proPic, String enable, String type) {
         this.id = id;
         this.username = username;
         this.name = name;
@@ -32,6 +32,15 @@ public class FoundLostItem {
         this.time = time;
         this.proPic = proPic;
         this.enable = enable;
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getEnable() {

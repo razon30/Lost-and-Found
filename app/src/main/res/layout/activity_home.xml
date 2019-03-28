@@ -6,7 +6,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/colorPrimary"
         android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/searchTxtbox"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/tv_back"
+            android:drawablePadding="10dp"
+            android:drawableRight="@drawable/ic_search1"
+            android:gravity="center_vertical"
+            android:hint="Search Here..."
+            android:paddingLeft="20dp"
+            android:textSize="16sp"
+            android:paddingTop="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="16dp"
+            android:textStyle="italic" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,8 +52,7 @@
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 

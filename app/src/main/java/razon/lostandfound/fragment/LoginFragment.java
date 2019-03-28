@@ -26,9 +26,23 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+
 import razon.lostandfound.R;
+import razon.lostandfound.activity.AdminActivity;
 import razon.lostandfound.activity.HomeActivity;
+import razon.lostandfound.utils.EncryptDecrypt;
 import razon.lostandfound.utils.SharePreferenceSingleton;
+import razon.lostandfound.utils.SimpleActivityTransition;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -96,6 +110,19 @@ public class LoginFragment extends Fragment {
         if (TextUtils.isEmpty(passString)) {
             pass.setError("Password is Required");
             Toast.makeText(getContext(), "Password is Required", Toast.LENGTH_SHORT).show();
+            return;
+        }
+//        else {
+//            String key = "Bar12345Bar12345"; // 128 bit key
+//            String initVector = "RandomInitVector"; // 16 bytes IV
+//            passString = EncryptDecrypt.encrypt(key, initVector, passString);
+//        }
+
+        if (usernameString.equals("admin12") && passString.equals("admin12")){
+            SimpleActivityTransition.goToNextActivity(getActivity(), AdminActivity.class);
+            SharePreferenceSingleton.getInstance(getActivity()).saveString("username",usernameString);
+            SharePreferenceSingleton.getInstance(getActivity()).saveString("user","1");
+            getActivity().finish();
             return;
         }
 

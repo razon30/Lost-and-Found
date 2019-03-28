@@ -101,9 +101,9 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         SentMessageHolder(View itemView) {
             super(itemView);
 
-            messageText = (TextView) itemView.findViewById(R.id.text_message_body);
-            timeText = (TextView) itemView.findViewById(R.id.text_message_time);
-            image_message = (ImageView) itemView.findViewById(R.id.image_message);
+            messageText = itemView.findViewById(R.id.text_message_body);
+            timeText = itemView.findViewById(R.id.text_message_time);
+            image_message = itemView.findViewById(R.id.image_message);
         }
 
         void bind(Message message) {
@@ -112,11 +112,10 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                 image_message.setVisibility(View.GONE);
                 messageText.setVisibility(View.VISIBLE);
                 messageText.setText(message.getBody());
-                messageText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                messageText.setOnClickListener(view -> {
 
-                    }
+
+
                 });
             }else {
                 messageText.setVisibility(View.GONE);
@@ -124,12 +123,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                 byte[] data = Base64.decode(message.getImage(), Base64.DEFAULT);
                 final Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
                 image_message.setImageBitmap(bmp);
-                image_message.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showImage(bmp);
-                    }
-                });
+                image_message.setOnClickListener(view -> showImage(bmp));
             }
         }
     }
@@ -142,11 +136,11 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         ReceivedMessageHolder(View itemView) {
             super(itemView);
 
-            messageText = (TextView) itemView.findViewById(R.id.text_message_body);
-            timeText = (TextView) itemView.findViewById(R.id.text_message_time);
-            nameText = (TextView) itemView.findViewById(R.id.text_message_name);
+            messageText = itemView.findViewById(R.id.text_message_body);
+            timeText = itemView.findViewById(R.id.text_message_time);
+            nameText = itemView.findViewById(R.id.text_message_name);
           //  profileImage = (ImageView) itemView.findViewById(R.id.image_message_profile);
-            image_message = (ImageView) itemView.findViewById(R.id.image_message);
+            image_message = itemView.findViewById(R.id.image_message);
         }
 
         void bind(Message message) {
@@ -157,11 +151,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                 messageText.setVisibility(View.VISIBLE);
                 image_message.setVisibility(View.GONE);
                 messageText.setText(message.getBody());
-                messageText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                messageText.setOnClickListener(view -> {
 
-                    }
                 });
             }else {
                 messageText.setVisibility(View.GONE);
@@ -169,12 +160,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                 byte[] data = Base64.decode(message.getImage(), Base64.DEFAULT);
                 final Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
                 image_message.setImageBitmap(bmp);
-                image_message.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showImage(bmp);
-                    }
-                });
+                image_message.setOnClickListener(view -> showImage(bmp));
             }
         }
     }
@@ -182,8 +168,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     private void showImage(Bitmap data) {
 
         View view = context.getLayoutInflater().inflate(R.layout.image_view_layout, null);
-        ImageView imageView = (ImageView) view.findViewById(R.id.image);
-        ImageView cancel = (ImageView) view.findViewById(R.id.cancel);
+        ImageView imageView = view.findViewById(R.id.image);
+        ImageView cancel = view.findViewById(R.id.cancel);
         imageView.setMinimumHeight(context.getWindowManager().getDefaultDisplay().getHeight());
         imageView.setMinimumWidth(context.getWindowManager().getDefaultDisplay().getWidth());
         imageView.setImageBitmap(data);

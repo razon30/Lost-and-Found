@@ -2,6 +2,7 @@ package razon.lostandfound.fragment;
 
 
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,11 +22,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import razon.lostandfound.activity.HomeActivity;
 import razon.lostandfound.adapter.AdapterLost;
 import razon.lostandfound.R;
 import razon.lostandfound.model.FoundLostItem;
 import razon.lostandfound.utils.FirebaseEndPoint;
 import razon.lostandfound.utils.FragmentNode;
+import razon.lostandfound.utils.MyApplication;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +43,7 @@ public class LostFragment extends Fragment {
     DatabaseReference databaseReference;
     ValueEventListener valueEventListener;
     ArrayList<FoundLostItem> lostList;
+
 
     ProgressDialog progressDialouge;
 
@@ -75,7 +79,6 @@ public class LostFragment extends Fragment {
 
                     lostList.add(postSnapshot.getValue(FoundLostItem.class));
 
-                    Log.d("size", postSnapshot.getValue() + "");
 
                 }
 
@@ -83,6 +86,7 @@ public class LostFragment extends Fragment {
                     recyclerView.setVisibility(View.GONE);
                     no_item.setVisibility(View.VISIBLE);
                 } else {
+
                     Collections.reverse(lostList);
                     recyclerView.setVisibility(View.VISIBLE);
                     no_item.setVisibility(View.GONE);
@@ -124,8 +128,8 @@ public class LostFragment extends Fragment {
 
     private void initialization(View view) {
 
-        no_item = (LinearLayout) view.findViewById(R.id.no_item);
-        recyclerView = (RecyclerView) view.findViewById(R.id.lost_recycler);
+        no_item = view.findViewById(R.id.no_item);
+        recyclerView = view.findViewById(R.id.lost_recycler);
         lostList = new ArrayList<>();
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         adapter = new AdapterLost(getActivity(), lostList, FragmentNode.LOST);
